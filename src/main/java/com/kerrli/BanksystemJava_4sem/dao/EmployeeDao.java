@@ -1,7 +1,10 @@
 package com.kerrli.BanksystemJava_4sem.dao;
 
 import com.kerrli.BanksystemJava_4sem.entity.Employee;
+import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface EmployeeDao {
-    public Employee findByLogin(String login);
+    Employee findByLogin(String login);
 }

@@ -11,7 +11,7 @@
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password"></property>
         <!-- JDBC connection pool (use the built-in) -->
-        <property name="hibernate.connection.pool_size">1</property>
+        <property name="hibernate.connection.pool_size">100</property>
         <!-- Echo all executed SQL to stdout -->
         <property name="show_sql">true</property>
         <!-- SQL dialect -->
@@ -19,9 +19,9 @@
         <property name="hibernate.current_session_context_class">thread</property>
         <property name="hibernate.connection.CharSet">utf8</property>
         <property name="hibernate.connection.characterEncoding">utf8</property>
-        <property name="hibernate.connection.useUnicode">true</property>
+        <!-- <property name="hibernate.connection.useUnicode">true</property> -->
 
-        <!-- <mapping class="ru.mirea.prac15.Worker" /> -->
+        <mapping class="com.kerrli.BanksystemJava_4sem.entity.Employee" />
 
     </session-factory>
 </hibernate-configuration>

@@ -4,12 +4,15 @@ import com.kerrli.BanksystemJava_4sem.entity.Employee;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public class HibernateSessionFactoryUtil {
+import javax.annotation.PostConstruct;
+
+public final class HibernateSessionFactoryUtil {
+    @Autowired
     private static SessionFactory sessionFactory;
 
-    private HibernateSessionFactoryUtil() {}
-
+    @PostConstruct
     public static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
             try {

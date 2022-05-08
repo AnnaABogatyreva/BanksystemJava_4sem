@@ -1,16 +1,21 @@
 package com.kerrli.BanksystemJava_4sem.entity;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+@Data
 @Entity
 @Table(name = "employee")
 public class Employee {
+    @Id
     @Column(name = "login")
     private String login;
     @Column(name = "name")
@@ -20,14 +25,28 @@ public class Employee {
     @Column(name = "role")
     private String role;
 
-    public Employee() {}
-
-    public Employee(String login, String password) {
-        this.login = login;
-        this.password = hashPassword(password);
+    public Employee() {
+        this.login = null;
+        this.name = null;
+        this.password = null;
+        this.role = null;
     }
 
-    public String hashPassword(String password) {
+    public Employee(String login, String name, String password, String role) {
+        this.login = login;
+        this.name = name;
+        this.password = hashPassword(password);
+        this.role = role;
+    }
+
+    public Employee(Employee employee) {
+        this.login = employee.login;
+        this.name = employee.name;
+        this.password = employee.password;
+        this.role = employee.role;
+    }
+
+    public static String hashPassword(String password) {
         String hash = "";
         try {
             MessageDigest md = null;
@@ -36,12 +55,27 @@ public class Employee {
             byte[] theMD5digest = md.digest(bytesOfMessage);
             for (int n = 0; n < 16; n++)
                 hash += String.format("%02x", theMD5digest[n]);
-            System.out.println(hash);
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return hash;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     @Override
