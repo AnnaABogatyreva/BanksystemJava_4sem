@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/main-container.css">
     <link rel="icon" type="image/png" href="images/favicon.png">
-    <title>Оператор<p th:text="${emp_name}" /></title>
+    <title>Оператор th:text="${employee_name}"</title>
 </head>
 <body>
 
@@ -16,14 +16,14 @@
     <header class="header">
         <div class="header-container">
             <div class="header-menu">
-                <div class="subbutton" onclick="document.location.href='oper.php'">Оператор</div>
-                <div class="subbutton" onclick="document.location.href='acc.php'">Бухгалтер</div>
+                <div class="subbutton" onclick="document.location.href='/oper'">Оператор</div>
+                <div class="subbutton" onclick="document.location.href='/acc'">Бухгалтер</div>
             </div>
             <div class="role-name">
-			<span>Сотрудник: <span th:text="${emp_name}" /></span>
+			<span>Сотрудник: <span th:text="${employee_name}" />, <span th:text="${employee_role}" /></span>
             </div>
             <div class="exit-button subbutton">
-                <div onclick="document.location.href='/signout'">Выход</div>
+                <div onclick="document.location.href='/index'">Выход</div>
             </div>
         </div>
     </header>

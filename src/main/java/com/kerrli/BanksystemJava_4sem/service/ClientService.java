@@ -1,6 +1,6 @@
 package com.kerrli.BanksystemJava_4sem.service;
 
-import com.kerrli.BanksystemJava_4sem.dao.ClientDaoImpl;
+import com.kerrli.BanksystemJava_4sem.repository.ClientDaoImpl;
 import com.kerrli.BanksystemJava_4sem.entity.Client;
 
 public class ClientService {

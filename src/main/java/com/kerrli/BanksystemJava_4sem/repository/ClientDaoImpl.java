@@ -1,13 +1,14 @@
-package com.kerrli.BanksystemJava_4sem.dao;
+package com.kerrli.BanksystemJava_4sem.repository;
 
 import com.kerrli.BanksystemJava_4sem.entity.Client;
-import com.kerrli.BanksystemJava_4sem.entity.Employee;
 import com.kerrli.BanksystemJava_4sem.util.HibernateSessionFactoryUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import org.hibernate.query.Query;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ClientDaoImpl implements ClientDao {
     private Session session;
 

@@ -1,4 +1,4 @@
-package com.kerrli.BanksystemJava_4sem.dao;
+package com.kerrli.BanksystemJava_4sem.repository;
 
 import com.kerrli.BanksystemJava_4sem.entity.Employee;
 import org.hibernate.Session;

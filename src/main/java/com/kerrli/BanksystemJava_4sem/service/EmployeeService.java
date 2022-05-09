@@ -1,9 +1,7 @@
 package com.kerrli.BanksystemJava_4sem.service;
 
-import com.kerrli.BanksystemJava_4sem.dao.EmployeeDaoImpl;
+import com.kerrli.BanksystemJava_4sem.repository.EmployeeDaoImpl;
 import com.kerrli.BanksystemJava_4sem.entity.Employee;
-import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

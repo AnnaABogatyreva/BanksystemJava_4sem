@@ -16,8 +16,6 @@ import java.security.NoSuchAlgorithmException;
 @Data
 @Entity
 @Table(name = "employee")
-@Getter
-@Setter
 public class Employee {
     @Id
     @Column(name = "login")
