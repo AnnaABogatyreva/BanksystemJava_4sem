@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,7 @@
 <body>
 <div class="app-router-container">
     <div class="auth-form">
-        <form action="/signin" modelAttribute="employeeJSP" method="POST">
+        <form action="/signin" method="POST">
             <p class="form-name">Java Банк<br>Версия 1.0.5</p>
             <label>Логин</label>
             <label>
@@ -23,7 +23,7 @@
             </label>
             <label><a href="" title="Это исключительно Ваши проблемы.">Забыли пароль?</a></label>
             <button type="submit" title="Вход в систему">Войти</button>
-            <label class="message"><p th:text="${message}" /></label>
+            <label class="message"><p th:text="${message}"></p></label>
         </form>
     </div>
 </div>

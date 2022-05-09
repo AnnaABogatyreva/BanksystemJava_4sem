@@ -1,9 +1,5 @@
 package com.kerrli.BanksystemJava_4sem.entity;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,7 +9,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-@Data
 @Entity
 @Table(name = "employee")
 public class Employee {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/main-container.css">
     <link rel="icon" type="image/png" href="images/favicon.png">
-    <title>Оператор th:text="${employee_name}"</title>
+    <title>Оператор</title>
 </head>
 <body>
 
@@ -20,7 +20,9 @@
                 <div class="subbutton" onclick="document.location.href='/acc'">Бухгалтер</div>
             </div>
             <div class="role-name">
-			<span>Сотрудник: <span th:text="${employee_name}" />, <span th:text="${employee_role}" /></span>
+			    <span>
+                    Сотрудник: <span th:text="${employee_name}"></span>, <span th:text="${employee_role}"></span>
+                </span>
             </div>
             <div class="exit-button subbutton">
                 <div onclick="document.location.href='/index'">Выход</div>
@@ -33,7 +35,7 @@
             <div class="column1">
                 <div class="form">
                     <div class="form-name"><p>Поиск клиента</p></div>
-                    <form action="/oper/find_client_by_passport" method="POST">
+                    <form action="/operwork" method="POST">
                         <label>Номер паспорта</label>
                         <label><input pattern="^[0-9]{4} [0-9]{6}$" name="passport" required="required" placeholder="Серия и номер"></label>
                         <input class="button" type="submit" value="Поиск" title="Начать поиск клиента по номеру паспорта">

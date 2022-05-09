@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
     <meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,11 +11,30 @@
     <link rel="icon" type="image/png" href="images/favicon.png">
     <title>Бухгалтер</title>
 </head>
+
 <body>
 
-<div>
-   ACC PAGE
-</div>
+<header class="header">
+    <div class="header-container">
+        <div class="header-menu">
+            <div class="subbutton" onclick="document.location.href='/oper'">Оператор</div>
+            <div class="subbutton" onclick="document.location.href='/acc'">Бухгалтер</div>
+        </div>
+        <div class="role-name">
+			    <span>
+                    Сотрудник: <span th:text="${employee_name}"></span>, <span th:text="${employee_role}"></span>
+                </span>
+        </div>
+        <div class="exit-button subbutton">
+            <div onclick="document.location.href='/index'">Выход</div>
+        </div>
+    </div>
+</header>
 
+<main>
+    <div>
+        ACC PAGE
+    </div>
+</main>
 </body>
 </html>
