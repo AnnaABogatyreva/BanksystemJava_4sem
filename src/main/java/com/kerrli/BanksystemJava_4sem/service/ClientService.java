@@ -17,4 +17,8 @@ public class ClientService {
     public Client findClientByPassport(String passport) {
         return clientDao.findByPassport(passport);
     }
+
+    public boolean createClient(Client templateClient) {
+        return clientDao.createClient(templateClient);
+    }
 }

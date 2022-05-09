@@ -11,4 +11,6 @@ public interface ClientDao {
     Client findByPhone(String phone);
 
     Client findByPassport(String passport);
+
+    boolean createClient(Client templateClient);
 }

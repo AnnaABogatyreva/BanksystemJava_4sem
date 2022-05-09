@@ -45,5 +45,13 @@ public class ClientDaoImpl implements ClientDao {
         return client;
     }
 
+    @Override
+    public boolean createClient(Client templateClient) {
+        Transaction transaction = session.beginTransaction();
+        session.saveOrUpdate(templateClient);
+        transaction.commit();
+        return true;
+    }
+
 
 }

@@ -40,17 +40,6 @@ public class EmployeeController {
         return "acc";
     }
 
-    /*@GetMapping("/operwork")
-    public String operwork(HttpSession httpSession, Model model) {
-        Employee employee = (Employee) httpSession.getAttribute("employee");
-        model.addAttribute("employee_name", employee.getName());
-        model.addAttribute("employee_role", employee.getRole());
-        Client client = (Client) httpSession.getAttribute("client");
-        model.addAttribute("client_name", client.getName());
-        model.addAttribute("client_passport", client.getPassport());
-        return "acc";
-    }*/
-
     @PostMapping("/signin")
     public String signin(@RequestParam String login, @RequestParam String password,
                          @RequestParam(name="message", required=false, defaultValue="") String message,
@@ -76,8 +65,8 @@ public class EmployeeController {
 
     @PostMapping("/signout")
     public String signout(HttpSession httpSession) {
-        //httpSession.removeAttribute("client");
-        //httpSession.removeAttribute("employee");
+        httpSession.removeAttribute("client");
+        httpSession.removeAttribute("employee");
         return "index";
     }
 }

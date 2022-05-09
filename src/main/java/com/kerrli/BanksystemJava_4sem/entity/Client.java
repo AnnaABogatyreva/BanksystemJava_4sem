@@ -37,6 +37,24 @@ public class Client {
     @Column(name = "reg")
     private String reg;
 
+    public Client(String name, String email, Date birthdate, String passport, String address,
+                  String phone, String passgiven, String passcode, Date passdate, String sex,
+                  String birthplace, String reg) {
+        this.id = 0;
+        this.name = name;
+        this.email = email;
+        this.birthdate = birthdate;
+        this.passport = passport;
+        this.address = address;
+        this.phone = phone;
+        this.passgiven = passgiven;
+        this.passcode = passcode;
+        this.passdate = passdate;
+        this.sex = sex;
+        this.birthplace = birthplace;
+        this.reg = reg;
+    }
+
     public int getId() {
         return id;
     }

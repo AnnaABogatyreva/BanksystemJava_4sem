@@ -46,7 +46,7 @@
             <div class="column2">
                 <div class="form">
                     <div class="form-name"><p>Создать профиль клиента</p></div>
-                    <form action="vendor/create_client.php" method="POST">
+                    <form action="/create_client" method="POST">
                         <label>Фамилия, имя, отчество</label>
                         <label><input type="text" required="required" name="name" placeholder="Иванов Иван Иванович"></label>
 
@@ -84,7 +84,7 @@
                         <label><input type="email" name="email" placeholder="example@email.com"></label>
 
                         <input class="button" type="submit" value="Создать" title="Создать новый профиль клиента">
-                        <label class="message"><?php echo session_message("message-create-client"); ?></label>
+                        <label class="message"><p th:text="${message_create_client}"></p></label>
                     </form>
                 </div>
             </div>
