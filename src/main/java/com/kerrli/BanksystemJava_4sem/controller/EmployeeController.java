@@ -5,10 +5,7 @@ import com.kerrli.BanksystemJava_4sem.service.EmployeeService;
 import org.hibernate.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class EmployeeController {
@@ -18,7 +15,7 @@ public class EmployeeController {
         employeeService = new EmployeeService();
     }
 
-    @GetMapping("/signin")
+    @PostMapping("/signin")
     public String signin(@RequestParam String login, @RequestParam String password,
                          @RequestParam(name="message", required=false, defaultValue="") String message, Model model) {
         boolean passOk = employeeService.checkPassword(login, password);
@@ -27,7 +24,6 @@ public class EmployeeController {
             model.addAttribute("employee", employee);
             model.addAttribute("emp_role", employee.getRole());
             model.addAttribute("emp_name", employee.getName());
-            System.out.println(model.getAttribute("auth_employee"));
             if (employee.getRole().compareTo("admin") == 0 || employee.getRole().compareTo("oper") == 0)
                 return "oper";
             else if (employee.getRole().compareTo("accountant") == 0)
@@ -41,7 +37,7 @@ public class EmployeeController {
         }
     }
 
-    @GetMapping("/signout")
+    @PostMapping("/signout")
     public String signout(@RequestParam String login, @RequestParam String password, Model model) {
         // дописать выход из профиля
         return "index";

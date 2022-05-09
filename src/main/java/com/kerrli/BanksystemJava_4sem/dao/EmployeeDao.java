@@ -6,5 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EmployeeDao {
+
+    Session getSession();
+    
     Employee findByLogin(String login);
 }
