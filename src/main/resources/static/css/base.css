@@ -49,7 +49,7 @@ label{
 	margin-top: 10px;
 }
 .access-error{margin-top: 100px;}
-.message{color:red;}
+.error{color:red;}
 .report{color:inherit;}
 .information{color: darkblue;}
 .form-name>p{

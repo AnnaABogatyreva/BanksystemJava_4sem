@@ -39,7 +39,7 @@
                         <label>Номер паспорта</label>
                         <label><input pattern="^[0-9]{4} [0-9]{6}$" name="passport" required="required" placeholder="Серия и номер"></label>
                         <input class="button" type="submit" value="Поиск" title="Начать поиск клиента по номеру паспорта">
-                        <label class="message"><p th:text="${message_find_client}" /></label>
+                        <label class="error"><span th:text="${error_find_client}"></span></label>
                     </form>
                 </div>
             </div>
@@ -84,7 +84,8 @@
                         <label><input type="email" name="email" placeholder="example@email.com"></label>
 
                         <input class="button" type="submit" value="Создать" title="Создать новый профиль клиента">
-                        <label class="message"><p th:text="${message_create_client}"></p></label>
+                        <label class="report"><span th:text="${report_create_client}"></span></label>
+                        <label class="error"><span th:text="${error_create_client}"></span></label>
                     </form>
                 </div>
             </div>
@@ -93,7 +94,6 @@
 
     </main>
     <script src="js/script.js"></script>
-
 </div>
 
 </body>

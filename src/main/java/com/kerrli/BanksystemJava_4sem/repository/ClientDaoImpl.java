@@ -46,12 +46,17 @@ public class ClientDaoImpl implements ClientDao {
     }
 
     @Override
-    public boolean createClient(Client templateClient) {
+    public void createClient(Client templateClient) {
         Transaction transaction = session.beginTransaction();
         session.saveOrUpdate(templateClient);
         transaction.commit();
-        return true;
     }
 
+    @Override
+    public void updateClient(Client client) {
+        Transaction transaction = session.beginTransaction();
+        session.merge(client);
+        transaction.commit();
+    }
 
 }

@@ -12,5 +12,7 @@ public interface ClientDao {
 
     Client findByPassport(String passport);
 
-    boolean createClient(Client templateClient);
+    void createClient(Client templateClient);
+
+    void updateClient(Client client);
 }

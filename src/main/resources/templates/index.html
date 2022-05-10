@@ -12,7 +12,7 @@
 <div class="app-router-container">
     <div class="auth-form">
         <form action="/signin" method="POST">
-            <p class="form-name">Java Банк<br>Версия 1.0.7</p>
+            <p class="form-name">Java Банк<br>Версия 1.0.8</p>
             <label>Логин</label>
             <label>
                 <input type="text" name="login" placeholder="Введите логин" required>
@@ -23,7 +23,7 @@
             </label>
             <label><a href="" title="Это исключительно Ваши проблемы.">Забыли пароль?</a></label>
             <button type="submit" title="Вход в систему">Войти</button>
-            <label class="message"><p th:text="${message}"></p></label>
+            <label class="message"><span th:text="${message}"></span></label>
         </form>
     </div>
 </div>
