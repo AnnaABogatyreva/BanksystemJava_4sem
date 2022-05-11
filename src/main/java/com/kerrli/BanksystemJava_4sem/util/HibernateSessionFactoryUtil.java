@@ -1,7 +1,6 @@
 package com.kerrli.BanksystemJava_4sem.util;
 
-import com.kerrli.BanksystemJava_4sem.entity.Client;
-import com.kerrli.BanksystemJava_4sem.entity.Employee;
+import com.kerrli.BanksystemJava_4sem.entity.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -20,6 +19,10 @@ public final class HibernateSessionFactoryUtil {
                 Configuration configuration = new Configuration().configure();
                 configuration.addAnnotatedClass(Employee.class);
                 configuration.addAnnotatedClass(Client.class);
+                configuration.addAnnotatedClass(Currency.class);
+                configuration.addAnnotatedClass(Account.class);
+                configuration.addAnnotatedClass(AccountCnt.class);
+                configuration.addAnnotatedClass(AccountCnt.AccountCntKey.class);
                 StandardServiceRegistryBuilder builder =
                     new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
                 sessionFactory = configuration.buildSessionFactory(builder.build());

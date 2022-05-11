@@ -1,5 +1,7 @@
 package com.kerrli.BanksystemJava_4sem.entity;
 
+import com.kerrli.BanksystemJava_4sem.util.Lib;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -91,6 +93,10 @@ public class Client {
         return birthdate;
     }
 
+    public String getBirthdateString() {
+        return Lib.formatDate(birthdate);
+    }
+
     public String getPassport() {
         return passport;
     }
@@ -113,6 +119,10 @@ public class Client {
 
     public Date getPassdate() {
         return passdate;
+    }
+
+    public String getPassdateString() {
+        return Lib.formatDate(passdate);
     }
 
     public String getSex() {

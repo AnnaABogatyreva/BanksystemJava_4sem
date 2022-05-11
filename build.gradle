@@ -21,14 +21,9 @@ tasks.withType(JavaCompile) {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	//implementation 'org.projectlombok:lombok:1.18.18'
-	//implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	//implementation 'org.springframework.session:spring-session-core:2.6.3'
-	//implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.1.0-M14'
 	runtimeOnly 'mysql:mysql-connector-java'
-	//developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	//testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {

@@ -18,23 +18,11 @@ public class ClientService {
         return clientDao.findByPassport(passport);
     }
 
-    public String createClient(Client templateClient) {
-        try {
-            clientDao.createClient(templateClient);
-            return "";
-        }
-        catch (Exception e) {
-            return e.getMessage();
-        }
+    public void createClient(Client templateClient) {
+        clientDao.createClient(templateClient);
     }
 
-    public String updateClient(Client client) {
-        try {
-            clientDao.updateClient(client);
-            return "";
-        }
-        catch (Exception e) {
-            return e.getMessage();
-        }
+    public void updateClient(Client client) {
+        clientDao.updateClient(client);
     }
 }

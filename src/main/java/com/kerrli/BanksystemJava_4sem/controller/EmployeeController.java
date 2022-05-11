@@ -27,17 +27,21 @@ public class EmployeeController {
     @GetMapping("/oper")
     public String oper(HttpSession httpSession, Model model) {
         Employee employee = (Employee) httpSession.getAttribute("employee");
-        model.addAttribute("employee_name", employee.getName());
-        model.addAttribute("employee_role", employee.getRole());
-        return "oper";
+        model.addAttribute("employee", employee);
+        if (employee.getRole().compareTo("admin") == 0 || employee.getRole().compareTo("operator") == 0) {
+            return "oper";
+        }
+        return "redirect:/acc";
     }
 
     @GetMapping("/acc")
     public String acc(HttpSession httpSession, Model model) {
         Employee employee = (Employee) httpSession.getAttribute("employee");
-        model.addAttribute("employee_name", employee.getName());
-        model.addAttribute("employee_role", employee.getRole());
-        return "acc";
+        model.addAttribute("employee", employee);
+        if (employee.getRole().compareTo("admin") == 0 || employee.getRole().compareTo("accountant") == 0) {
+            return "acc";
+        }
+        return "redirect:/oper";
     }
 
     @PostMapping("/signin")
@@ -48,18 +52,17 @@ public class EmployeeController {
         if (passOk) {
             Employee employee = employeeService.findUser(login);
             httpSession.setAttribute("employee", employee);
-            model.addAttribute("employee_name", employee.getName());
-            model.addAttribute("employee_role", employee.getRole());
-            if (employee.getRole().compareTo("admin") == 0 || employee.getRole().compareTo("oper") == 0)
-                return "oper";
+            model.addAttribute("employee", employee);
+            if (employee.getRole().compareTo("admin") == 0 || employee.getRole().compareTo("operator") == 0)
+                return "redirect:/oper";
             else if (employee.getRole().compareTo("accountant") == 0)
-                return "acc";
+                return "redirect:/acc";
             else
-                return "index";
+                return "redirect:/index";
         }
         else {
             model.addAttribute("message", "Неверный пароль");
-            return "index";
+            return "redirect:/index";
         }
     }
 
@@ -67,6 +70,6 @@ public class EmployeeController {
     public String signout(HttpSession httpSession) {
         httpSession.removeAttribute("client");
         httpSession.removeAttribute("employee");
-        return "index";
+        return "redirect:/index";
     }
 }

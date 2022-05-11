@@ -20,13 +20,13 @@
         <div class="role-name-container">
             <div class="client-info">
                 <span>
-                    Сотрудник: <span th:text="${employee_name}"></span>, <span th:text="${employee_role}"></span>
+                    Сотрудник: <span th:text="${employee.name}"></span>, <span th:text="${employee.role}"></span>
                 </span>
             </div>
             <div class="role-name">
 				<span>
-                    Работа с клиентом: <span th:text="${client_name}"></span>,
-                    паспорт № <span th:text="${client_passport}"></span>
+                    Работа с клиентом: <span th:text="${client.name}"></span>,
+                    паспорт № <span th:text="${client.passport}"></span>
                 </span>
             </div>
         </div>
@@ -47,49 +47,49 @@
                 <form action="/edit_client" method="POST">
                     <label>Фамилия, имя, отчество</label>
                     <label><input type="text" required="required" name="name"
-                                  placeholder="Иванов Иван Иванович" th:value="${client_name}"></label>
+                                  placeholder="Иванов Иван Иванович" th:value="${client.name}"></label>
 
                     <label>Телефон</label>
                     <label><input type="tel" required="required" name="phone"
-                                  placeholder="+78005553535" th:value="${client_phone}"></label>
+                                  placeholder="+78005553535" th:value="${client.phone}"></label>
 
                     <label>Номер паспорта</label>
                     <label><input pattern="^[0-9]{4} [0-9]{6}$" required="required" name="passport"
-                                  placeholder="Серия и номер" th:value="${client_passport}"></label>
+                                  placeholder="Серия и номер" th:value="${client.passport}"></label>
 
                     <label>Кем выдан</label>
                     <label><input type="text" name="passgiven"
-                                  placeholder="Название подразделения" th:value="${client_passgiven}"></label>
+                                  placeholder="Название подразделения" th:value="${client.passgiven}"></label>
 
                     <label>Код подразделения</label>
                     <label><input pattern="^([0-9]{3}\-[0-9]{3}|)$" name="passcode"
-                                  placeholder="000-000" th:value="${client_passcode}"></label>
+                                  placeholder="000-000" th:value="${client.passcode}"></label>
 
                     <label>Дата выдачи</label>
-                    <label><input type="date" name="passdate" th:value="${client_passdate}"></label>
+                    <label><input type="date" name="passdateString" th:value="${client.getPassdateString()}"></label>
 
                     <label>Пол</label>
-                    <label><input pattern="^[МЖ]$" name="sex" placeholder="М/Ж" th:value="${client_sex}"></label>
+                    <label><input pattern="^[МЖ]$" name="sex" placeholder="М/Ж" th:value="${client.sex}"></label>
 
                     <label>Дата рождения</label>
-                    <label><input type="date" name="birthdate" th:value="${client_birthdate}"></label>
+                    <label><input type="date" name="birthdateString" th:value="${client.getBirthdateString()}"></label>
 
                     <label>Место рождения</label>
                     <label><input type="text" name="birthplace"
-                                  placeholder="Регион, город" th:value="${client_birthplace}"></label>
+                                  placeholder="Регион, город" th:value="${client.birthplace}"></label>
 
                     <label>Адрес регистрации</label>
                     <label><input type="text" name="reg" placeholder="Индекс, регион, город, улица, дом, квартира"
-                                  th:value="${client_reg}"></label>
+                                  th:value="${client.reg}"></label>
 
                     <label>Адрес проживания</label>
                     <label><input type="text" name="address" placeholder="Индекс, регион, город, улица, дом, квартира"
-                                  th:value="${client_address}">
+                                  th:value="${client.address}">
                     </label>
 
                     <label>Электронная почта</label>
                     <label><input type="email" name="email"
-                                  placeholder="example@email.com" th:value="${client_email}"></label>
+                                  placeholder="example@email.com" th:value="${client.email}"></label>
 
                     <input class="button" type="submit" value="Сохранить"
                            title="Сохранить изменения персональных данных клиента">
@@ -102,22 +102,20 @@
             <div class="form">
                 <a class="anchor" id="create_account"></a>
                 <div class="form-name"><p>Открыть новый счет</p></div>
-                <form action="vendor/create_account.php" method="POST">
+                <form action="/create_account" method="POST">
                     <div class="form-content">
                         <p>Выберите валюту нового счёта</p>
-                        <?php
-							$mysqli = get_sql_connection();
-							$result = $mysqli->query("SELECT * FROM currency");
-                        $cnt = 0;
-                        foreach ($result as $res) {
-                        echo '<div class="radio-currency"><input type="radio" name="currency" value="' . $res["code"] . '"' .
-                        ($cnt == 0 ? 'checked=1' : '') . '>' . '<label>' . $res["isocode"] . " (" . $res["name"] . ')</label></div>';
-                        $cnt++;
-                        }
-                        ?>
+                        <label><div class="select-block">
+                            <select class="form-control" name="currencyCode">
+                                <option selected></option>
+                                <option th:each="currency : ${currencyList}" th:value="${currency.code}"
+                                        th:text="${currency.name}"></option>
+                            </select>
+                        </div></label>
                     </div>
                     <div><input class="button" type="submit" value="Открыть" title="Открыть новый счёт"></div>
-                    <label class="report"><?php echo session_message("message-client"); ?></label>
+                    <label class="report"><span th:text="${report_create_account}"></span></label>
+                    <label class="error"><span th:text="${error_create_account}"></span></label>
                 </form>
             </div>
 
