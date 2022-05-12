@@ -123,18 +123,23 @@
                 <a class="anchor" id="close_account"></a>
                 <div class="form-name"><p>Закрыть счет</p></div>
                 <form action="/close_account" method="POST">
-                    <div class="form-content">
-                        <p>Выберите счет</p>
-                        <label><div class="select-block">
-                            <select class="form-control" name="accountNum">
-                                <option selected></option>
-                                <option th:each="account : ${zeroAccountList}" th:value="${account.accountNum}"
-                                        th:text="${account.getDescript()}"></option>
-                            </select>
-                        </div></label>
+                    <div th:unless="${zeroAccountList.isEmpty()}">
+                        <div class="form-content">
+                            <p>Выберите счет</p>
+                            <label><div class="select-block">
+                                <select class="form-control" name="accountNum">
+                                    <option selected></option>
+                                    <option th:each="account : ${zeroAccountList}" th:value="${account.accountNum}"
+                                            th:text="${account.getUpDescript()}"></option>
+                                </select>
+                            </div></label>
+                        </div>
+                        <div>
+                            <input class="button" type="submit" value="Закрыть" title="Закрыть выбранный счёт">
+                        </div>
                     </div>
-                    <div>
-                        <input class="button" type="submit" value="Закрыть" title="Закрыть выбранный счёт">
+                    <div th:if="${zeroAccountList.isEmpty()}">
+                        <label class="information">Нет открытых счетов</label>
                     </div>
                     <label class="report"><span th:text="${report_close_account}"></span></label>
                     <label class="error"><span th:text="${error_close_account}"></span></label>
@@ -145,107 +150,132 @@
             <div class="form">
                 <a class="anchor" id="push_account"></a>
                 <div class="form-name"><p>Пополнить счет</p></div>
-                <form action="vendor/push_account.php" method="POST">
-                    <?php if (client_account_count($_SESSION["client"]["id"], false) > 0) { /* есть счета 40817 */  ?>
-                    <div class="form-content">
-                        <p>Выберите счет</p>
-                        <label><div class="select-block"><select name="credit_accountnum" required>
-                            <option selected></option>
-                            <?php echo out_account_box($_SESSION["client"]["id"]); ?>
-                        </select></div></label>
+                <form action="/push_account" method="POST">
+                    <div th:unless="${accountList.isEmpty()}">
+                        <div class="form-content">
+                            <p>Выберите счет</p>
+                            <label><div class="select-block">
+                                <select class="form-control" name="accountNum">
+                                    <option selected></option>
+                                    <option th:each="account : ${accountList}" th:value="${account.accountNum}"
+                                            th:text="${account.getUpDescript()}"></option>
+                                </select>
+                            </div></label>
+                        </div>
+                        <div>
+                            <label>Сумма пополнения<input pattern="^\d+(\.\d{1,2}|)$" name="sum" required placeholder="100.00"></label>
+                        </div>
+                        <div>
+                            <input class="button" type="submit" value="Пополнить" title="Пополнить выбранный счёт">
+                        </div>
                     </div>
-                    <div>
-                        <label>Сумма пополнения<input pattern="^\d+(\.\d{1,2}|)$" name="sum" required placeholder="100.00"></label>
+                    <div th:if="${accountList.isEmpty()}">
+                        <label class="information">Нет открытых счетов</label>
                     </div>
-                    <div>
-                        <input class="button" type="submit" value="Пополнить" title="Пополнить выбранный счёт">
-                    </div>
-                    <label class="report"><?php echo session_message("message-push"); ?></label>
-                    <?php } else { /* нет подходящих счетов */ ?>
-                    <label class="information">Нет открытых счетов</label>
-                    <?php } ?>
+                    <label class="report"><span th:text="${report_push_account}"></span></label>
+                    <label class="error"><span th:text="${error_push_account}"></span></label>
                 </form>
             </div>
 
             <div class="form">
                 <a class="anchor" id="pop_account"></a>
                 <div class="form-name"><p>Снять средства со счета</p></div>
-                <form action="vendor/pop_account.php" method="POST">
-                    <?php if (client_account_count($_SESSION["client"]["id"], false) > 0) { /* есть счета 40817 */  ?>
-                    <div class="form-content">
-                        <p>Выберите счет</p>
-                        <label><div class="select-block"><select name="debit_accountnum" required>
-                            <option selected></option>
-                            <?php echo out_account_box($_SESSION["client"]["id"]); ?>
-                        </select></div></label>
+                <form action="/pop_account" method="POST">
+                    <div th:unless="${accountList.isEmpty()}">
+                        <div class="form-content" th:unless="${accountList.isEmpty()}">
+                            <p>Выберите счет</p>
+                            <label><div class="select-block">
+                                <select class="form-control" name="accountNum">
+                                    <option selected></option>
+                                    <option th:each="account : ${accountList}" th:value="${account.accountNum}"
+                                            th:text="${account.getUpDescript()}"></option>
+                                </select>
+                            </div></label>
+                        </div>
+                        <div>
+                            <label>Сумма снятия<input pattern="^\d+(\.\d{1,2}|)$" name="sum" required
+                                                      placeholder="100.00"></label>
+                        </div>
+                        <div>
+                            <input class="button" type="submit" value="Снять" title="Снять средства с выбранного счёта">
+                        </div>
                     </div>
-                    <div>
-                        <label>Сумма снятия<input pattern="^\d+(\.\d{1,2}|)$" name="sum" required placeholder="100.00"></label>
+                    <div th:if="${accountList.isEmpty()}">
+                        <label class="information">Нет открытых счетов</label>
                     </div>
-                    <div>
-                        <input class="button" type="submit" value="Снять" title="Снять средства с выбранного счёта">
-                    </div>
-                    <label class="report"><?php echo session_message("message-pop"); ?></label>
-                    <?php } else { /* нет подходящих счетов */ ?>
-                    <label class="information">Нет открытых счетов</label>
-                    <?php } ?>
+                    <label class="report"><span th:text="${report_pop_account}"></span></label>
+                    <label class="error"><span th:text="${error_pop_account}"></span></label>
                 </form>
             </div>
 
             <div class="form">
                 <a class="anchor" id="transaction_in"></a>
                 <div class="form-name"><p>Перевод средств между своими счетами</p></div>
-                <form action="vendor/transaction_in.php" method="POST">
-                    <?php if (client_account_count($_SESSION["client"]["id"], false) > 0) { /* есть счета 40817 */  ?>
-                    <div class="form-content"><p>Счет отправки перевода</p>
-                        <label><div class="select-block"><select name="debit_accountnum" required>
-                            <option selected></option>
-                            <?php echo out_account_box($_SESSION["client"]["id"]); ?>
-                        </select></div></label>
+                <form action="/transaction_in" method="POST">
+                    <div th:unless="${accountList.isEmpty()}">
+                        <div class="form-content"><p>Счет отправки перевода</p>
+                            <label><div class="select-block">
+                                <select class="form-control" name="debitAccountNum">
+                                    <option selected></option>
+                                    <option th:each="account : ${accountList}" th:value="${account.accountNum}"
+                                            th:text="${account.getUpDescript()}"></option>
+                                </select>
+                            </div></label>
+                        </div>
+                        <div class="form-content"><p>Счет приема перевода</p>
+                            <label><div class="select-block">
+                                <select class="form-control" name="creditAccountNum">
+                                    <option selected></option>
+                                    <option th:each="account : ${accountList}" th:value="${account.accountNum}"
+                                            th:text="${account.getUpDescript()}"></option>
+                                </select>
+                            </div></label>
+                        </div>
+                        <div>
+                            <label>Сумма перевода<input pattern="^\d+(\.\d{1,2}|)$" name="sum" required
+                                                        placeholder="100.00"></label>
+                        </div>
+                        <div>
+                            <input class="button" type="submit" value="Перевести" title="Перевести со счёта на счёт">
+                        </div>
                     </div>
-                    <div class="form-content"><p>Счет приема перевода</p>
-                        <label><div class="select-block"><select name="credit_accountnum" required>
-                            <option selected></option>
-                            <?php echo out_account_box($_SESSION["client"]["id"]); ?>
-                        </select></div></label>
+                    <div th:if="${accountList.isEmpty()}">
+                        <label class="information">Нет открытых счетов</label>
                     </div>
-                    <div>
-                        <label>Сумма перевода<input pattern="^\d+(\.\d{1,2}|)$" name="sum" required placeholder="100.00"></label>
-                    </div>
-                    <div>
-                        <input class="button" type="submit" value="Перевести" title="Перевести со счёта на счёт">
-                    </div>
-                    <label class="report"><?php echo session_message("message-transaction_in"); ?></label>
-                    <?php } else { /* нет подходящих счетов */ ?>
-                    <label class="information">Нет открытых счетов</label>
-                    <?php } ?>
+                    <label class="report"><span th:text="${report_transaction_in}"></span></label>
+                    <label class="error"><span th:text="${error_transaction_in}"></span></label>
                 </form>
             </div>
 
             <div class="form">
                 <a class="anchor" id="transaction_out"></a>
                 <div class="form-name"><p>Перевод средств другому клиенту</p></div>
-                <form action="vendor/transaction_out.php" method="POST">
-                    <?php if (client_account_count($_SESSION["client"]["id"], false) > 0) { /* есть счета 40817 */  ?>
-                    <div class="form-content"><p>Счет отправки перевода</p>
-                        <label><div class="select-block"><select name="debit_accountnum" required>
-                            <option selected></option>
-                            <?php echo out_account_box($_SESSION["client"]["id"]); ?>
-                        </select></div></label>
+                <form action="/transaction_out" method="POST">
+                    <div th:unless="${accountList.isEmpty()}">
+                        <div class="form-content"><p>Счет отправки перевода</p>
+                            <label><div class="select-block">
+                                <select class="form-control" name="creditAccountNum">
+                                    <option selected></option>
+                                    <option th:each="account : ${accountList}" th:value="${account.accountNum}"
+                                            th:text="${account.getUpDescript()}"></option>
+                                </select>
+                            </div></label>
+                        </div>
+                        <div>
+                            <label>Перевод клиенту по номеру телефона:<input type="tel" name="credit_phone" required placeholder="Номер телефона"></label>
+                        </div>
+                        <div>
+                            <label>Сумма перевода<input pattern="^\d+(\.\d{1,2}|)$" name="sum" required placeholder="100.00"></label>
+                        </div>
+                        <div>
+                            <input class="button" type="submit" value="Перевести" title="Перевести средства на выбранный счёт получателя">
+                        </div>
                     </div>
-                    <div>
-                        <label>Перевод клиенту по номеру телефона:<input type="tel" name="credit_phone" required placeholder="Номер телефона"></label>
+                    <div th:if="${accountList.isEmpty()}">
+                        <label class="information">Нет открытых счетов</label>
                     </div>
-                    <div>
-                        <label>Сумма перевода<input pattern="^\d+(\.\d{1,2}|)$" name="sum" required placeholder="100.00"></label>
-                    </div>
-                    <div>
-                        <input class="button" type="submit" value="Перевести" title="Перевести средства на выбранный счёт получателя">
-                    </div>
-                    <label class="report"><?php echo session_message("message-transaction_in"); ?></label>
-                    <?php } else { /* нет подходящих счетов */ ?>
-                    <label class="information">Нет открытых счетов</label>
-                    <?php } ?>
+                    <label class="report"><span th:text="${report_transaction_out}"></span></label>
+                    <label class="error"><span th:text="${error_transaction_out}"></span></label>
                 </form>
             </div>
 

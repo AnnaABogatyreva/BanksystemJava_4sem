@@ -34,6 +34,15 @@ public class Account {
         this.def = def;
     }
 
+    public Account(Account account) {
+        this.idClient = account.getIdClient();
+        this.accountNum = account.getAccountNum();
+        this.currency = account.getCurrency();
+        this.descript = account.getDescript();
+        this.closed = account.getClosed();
+        this.def = account.getDef();
+    }
+
     public int getIdClient() {
         return idClient;
     }
@@ -52,6 +61,10 @@ public class Account {
 
     public String getDescript() {
         return descript;
+    }
+
+    public Date getClosed() {
+        return closed;
     }
 
     public int getDef() {

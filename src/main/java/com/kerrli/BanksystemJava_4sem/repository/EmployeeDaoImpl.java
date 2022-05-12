@@ -14,6 +14,10 @@ public class EmployeeDaoImpl implements EmployeeDao {
         session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
     }
 
+    public EmployeeDaoImpl(Session session) {
+        this.session = session;
+    }
+
     public Session getSession() {
         return session;
     }

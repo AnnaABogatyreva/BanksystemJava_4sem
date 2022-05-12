@@ -29,4 +29,6 @@ public interface AccountDao {
     Account closeAccount(String accountNum) throws Exception;
 
     List getZeroAccountList(int idClient);
+
+    List getAccountList(int idClient);
 }

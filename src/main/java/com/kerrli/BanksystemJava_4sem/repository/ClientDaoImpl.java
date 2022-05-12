@@ -17,6 +17,10 @@ public class ClientDaoImpl implements ClientDao {
         session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
     }
 
+    public ClientDaoImpl(Session session) {
+        this.session = session;
+    }
+
     @Override
     public Session getSession() {
         return session;

@@ -18,6 +18,15 @@ public class EmployeeController {
         employeeService = new EmployeeService();
     }
 
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
+
+    @GetMapping("/")
+    public String start() {
+        return "redirect:/index";
+    }
+
     @GetMapping("/index")
     public String index(HttpSession httpSession, Model model) {
         httpSession.removeAttribute("client");

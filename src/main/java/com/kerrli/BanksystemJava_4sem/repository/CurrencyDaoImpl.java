@@ -15,6 +15,10 @@ public class CurrencyDaoImpl implements CurrencyDao {
         session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
     }
 
+    public CurrencyDaoImpl(Session session) {
+        this.session = session;
+    }
+
     @Override
     public Session getSession() {
         return session;

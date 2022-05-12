@@ -11,6 +11,14 @@ public class CurrencyService {
         currencyDao = new CurrencyDaoImpl();
     }
 
+    public CurrencyService(CurrencyDaoImpl currencyDao) {
+        this.currencyDao = currencyDao;
+    }
+
+    public CurrencyDaoImpl getCurrencyDao() {
+        return currencyDao;
+    }
+
     public List getCurrencyList() {
         return currencyDao.getCurrencyList();
     }

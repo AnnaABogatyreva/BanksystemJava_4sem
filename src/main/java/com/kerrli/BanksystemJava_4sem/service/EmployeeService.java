@@ -12,6 +12,14 @@ public class EmployeeService {
         employeeDao = new EmployeeDaoImpl();
     }
 
+    public EmployeeService(EmployeeDaoImpl employeeDao) {
+        this.employeeDao = employeeDao;
+    }
+
+    public EmployeeDaoImpl getEmployeeDao() {
+        return employeeDao;
+    }
+
     public Employee findUser(String login) {
         return employeeDao.findByLogin(login);
     }

@@ -10,6 +10,14 @@ public class ClientService {
         clientDao = new ClientDaoImpl();
     }
 
+    public ClientService(ClientDaoImpl clientDao) {
+        this.clientDao = clientDao;
+    }
+
+    public ClientDaoImpl getClientDao() {
+        return clientDao;
+    }
+
     public Client findClientByPhone(String phone) {
         return clientDao.findByPhone(phone);
     }

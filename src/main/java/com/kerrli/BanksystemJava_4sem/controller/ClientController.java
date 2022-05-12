@@ -2,10 +2,13 @@ package com.kerrli.BanksystemJava_4sem.controller;
 
 import com.kerrli.BanksystemJava_4sem.entity.Client;
 import com.kerrli.BanksystemJava_4sem.entity.Employee;
+import com.kerrli.BanksystemJava_4sem.repository.AccountDaoImpl;
+import com.kerrli.BanksystemJava_4sem.repository.CurrencyDaoImpl;
 import com.kerrli.BanksystemJava_4sem.service.AccountService;
 import com.kerrli.BanksystemJava_4sem.service.ClientService;
 import com.kerrli.BanksystemJava_4sem.service.CurrencyService;
 import com.kerrli.BanksystemJava_4sem.util.Lib;
+import org.hibernate.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +29,10 @@ public class ClientController {
         clientService = new ClientService();
     }
 
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
+    }
+
     @GetMapping("/operwork")
     public String operwork(HttpSession httpSession, Model model) {
         Employee employee = (Employee) httpSession.getAttribute("employee");
@@ -36,10 +43,13 @@ public class ClientController {
         Client client = (Client) httpSession.getAttribute("client");
         model.addAttribute("client", client);
         Lib.moveAttributeToModel(httpSession, model);
-        List currencyList = new CurrencyService().getCurrencyList();
+        Session tempSession = clientService.getClientDao().getSession();
+        List currencyList = new CurrencyService(new CurrencyDaoImpl(tempSession)).getCurrencyList();
         model.addAttribute("currencyList", currencyList);
-        List zeroAccountList = new AccountService().getZeroAccountList(client.getId());
+        List zeroAccountList = new AccountService(new AccountDaoImpl(tempSession)).getZeroAccountList(client.getId());
         model.addAttribute("zeroAccountList", zeroAccountList);
+        List accountList = new AccountService(new AccountDaoImpl(tempSession)).getAccountList(client.getId());
+        model.addAttribute("accountList", accountList);
         return "operwork";
     }
 

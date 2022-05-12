@@ -20,6 +20,10 @@ public class AccountDaoImpl implements AccountDao {
         session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
     }
 
+    public AccountDaoImpl(Session session) {
+        this.session = session;
+    }
+
     @Override
     public Session getSession() {
         return session;
@@ -152,10 +156,25 @@ public class AccountDaoImpl implements AccountDao {
             Account account = (Account) list.get(i);
             double balance = checkBalance(account.getAccountNum());
             if (Math.abs(balance) < 0.005) {
-                account.setDescript(getSelectBlockLine(account));
-                res.add(account);
+                AccountExt accountExt = new AccountExt(account, getSelectBlockLine(account));
+                res.add(accountExt);
             }
 
+        }
+        return res;
+    }
+
+    @Override
+    public List getAccountList(int idClient) {
+        String queryString = "FROM Account a WHERE a.closed IS NULL AND a.idClient = :idClient";
+        Query query = session.createQuery(queryString, Account.class);
+        query.setParameter("idClient", idClient);
+        List list = query.getResultList();
+        List res = new ArrayList();
+        for (int i = 0; i < list.size(); i++) {
+            Account account = (Account) list.get(i);
+            AccountExt accountExt = new AccountExt(account, getSelectBlockLine(account));
+            res.add(accountExt);
         }
         return res;
     }

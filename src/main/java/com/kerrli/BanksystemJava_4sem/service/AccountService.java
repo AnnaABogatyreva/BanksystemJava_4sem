@@ -11,7 +11,15 @@ public class AccountService {
 
     public AccountService() {
         accountDao = new AccountDaoImpl();
-        }
+    }
+
+    public AccountService(AccountDaoImpl accountDao) {
+        this.accountDao = accountDao;
+    }
+
+    public AccountDaoImpl getAccountDao() {
+        return accountDao;
+    }
 
     public Account createAccount(int idClient, String currencyCode, String acc2p, String descript) {
         return accountDao.createAccount(idClient, currencyCode, acc2p, descript);
@@ -19,6 +27,10 @@ public class AccountService {
 
     public List getZeroAccountList(int idClient) {
         return accountDao.getZeroAccountList(idClient);
+    }
+
+    public List getAccountList(int idClient) {
+        return accountDao.getAccountList(idClient);
     }
 
     public Account closeAccount(String accountNum) throws Exception {

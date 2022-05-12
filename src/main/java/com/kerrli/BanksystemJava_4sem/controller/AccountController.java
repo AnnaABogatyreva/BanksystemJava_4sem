@@ -2,12 +2,9 @@ package com.kerrli.BanksystemJava_4sem.controller;
 
 import com.kerrli.BanksystemJava_4sem.entity.Account;
 import com.kerrli.BanksystemJava_4sem.entity.Client;
-import com.kerrli.BanksystemJava_4sem.entity.Currency;
 import com.kerrli.BanksystemJava_4sem.service.AccountService;
-import com.kerrli.BanksystemJava_4sem.service.ClientService;
 import com.kerrli.BanksystemJava_4sem.util.Lib;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
