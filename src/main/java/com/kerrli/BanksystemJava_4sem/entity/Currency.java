@@ -14,14 +14,14 @@ public class Currency {
     @Column(name = "name")
     private String name;
     @Column(name = "isocode")
-    private String isocode;
+    private String isoCode;
 
     public Currency() {}
 
     public Currency(String code, String name, String isocode) {
         this.code = code;
         this.name = name;
-        this.isocode = isocode;
+        this.isoCode = isocode;
     }
 
     public String getCode() {
@@ -32,7 +32,7 @@ public class Currency {
         return name;
     }
 
-    public String getIsocode() {
-        return isocode;
+    public String getIsoCode() {
+        return isoCode;
     }
 }

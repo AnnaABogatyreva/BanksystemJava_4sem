@@ -3,6 +3,7 @@ package com.kerrli.BanksystemJava_4sem.controller;
 import com.kerrli.BanksystemJava_4sem.entity.Client;
 import com.kerrli.BanksystemJava_4sem.entity.Employee;
 import com.kerrli.BanksystemJava_4sem.service.EmployeeService;
+import com.kerrli.BanksystemJava_4sem.util.Lib;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ public class EmployeeController {
     public String index(HttpSession httpSession, Model model) {
         httpSession.removeAttribute("client");
         httpSession.removeAttribute("employee");
+        Lib.moveAttributeToModel(httpSession, model);
         return "index";
     }
 
@@ -29,6 +31,7 @@ public class EmployeeController {
         Employee employee = (Employee) httpSession.getAttribute("employee");
         model.addAttribute("employee", employee);
         if (employee.getRole().compareTo("admin") == 0 || employee.getRole().compareTo("operator") == 0) {
+            Lib.moveAttributeToModel(httpSession, model);
             return "oper";
         }
         return "redirect:/acc";
@@ -39,6 +42,7 @@ public class EmployeeController {
         Employee employee = (Employee) httpSession.getAttribute("employee");
         model.addAttribute("employee", employee);
         if (employee.getRole().compareTo("admin") == 0 || employee.getRole().compareTo("accountant") == 0) {
+            Lib.moveAttributeToModel(httpSession, model);
             return "acc";
         }
         return "redirect:/oper";
@@ -61,7 +65,7 @@ public class EmployeeController {
                 return "redirect:/index";
         }
         else {
-            model.addAttribute("message", "Неверный пароль");
+            Lib.setAttribute(httpSession, "message", "Неверный пароль");
             return "redirect:/index";
         }
     }

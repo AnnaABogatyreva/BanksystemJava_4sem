@@ -1,14 +1,17 @@
 package com.kerrli.BanksystemJava_4sem.entity;
 
+import com.kerrli.BanksystemJava_4sem.util.LibAccount;
+import org.hibernate.Session;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "account")
 public class Account {
-    @Id
     @Column(name = "idclient")
     private int idClient;
+    @Id
     @Column(name = "accountnum")
     private String accountNum;
     @Column(name = "currency")
@@ -29,5 +32,25 @@ public class Account {
         this.descript = descript;
         this.closed = closed;
         this.def = def;
+    }
+
+    public String getAccountNum() {
+        return accountNum;
+    }
+
+    public String getAcc2p() {
+        return accountNum.substring(0, 5);
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public String getDescript() {
+        return descript;
+    }
+
+    public void setDescript(String descript) {
+        this.descript = descript;
     }
 }

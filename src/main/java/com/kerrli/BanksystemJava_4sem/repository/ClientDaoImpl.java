@@ -24,18 +24,15 @@ public class ClientDaoImpl implements ClientDao {
 
     @Override
     public Client findByPhone(String phone) {
-        Transaction transaction = session.beginTransaction();
         String queryString = "SELECT c FROM Client c WHERE c.phone = :phone";
         Query query = session.createQuery(queryString, Client.class);
         query.setParameter("phone", phone);
         Client client = (Client) query.list().get(0);
-        transaction.commit();
         return client;
     }
 
     @Override
     public Client findByPassport(String passport) {
-        Transaction transaction = session.beginTransaction();
         String queryString = "SELECT c FROM Client c WHERE c.passport = :passport";
         Query query = session.createQuery(queryString, Client.class);
         query.setParameter("passport", passport);
@@ -43,7 +40,6 @@ public class ClientDaoImpl implements ClientDao {
             return null;
         }
         Client client = (Client) query.list().get(0);
-        transaction.commit();
         return client;
     }
 
@@ -60,5 +56,4 @@ public class ClientDaoImpl implements ClientDao {
         session.merge(client);
         transaction.commit();
     }
-
 }

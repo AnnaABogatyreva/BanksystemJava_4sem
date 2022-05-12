@@ -2,6 +2,7 @@ package com.kerrli.BanksystemJava_4sem.controller;
 
 import com.kerrli.BanksystemJava_4sem.entity.Client;
 import com.kerrli.BanksystemJava_4sem.entity.Employee;
+import com.kerrli.BanksystemJava_4sem.service.AccountService;
 import com.kerrli.BanksystemJava_4sem.service.ClientService;
 import com.kerrli.BanksystemJava_4sem.service.CurrencyService;
 import com.kerrli.BanksystemJava_4sem.util.Lib;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ClientController {
@@ -32,8 +35,11 @@ public class ClientController {
         model.addAttribute("employee", employee);
         Client client = (Client) httpSession.getAttribute("client");
         model.addAttribute("client", client);
+        Lib.moveAttributeToModel(httpSession, model);
         List currencyList = new CurrencyService().getCurrencyList();
         model.addAttribute("currencyList", currencyList);
+        List zeroAccountList = new AccountService().getZeroAccountList(client.getId());
+        model.addAttribute("zeroAccountList", zeroAccountList);
         return "operwork";
     }
 
@@ -41,7 +47,7 @@ public class ClientController {
     public String findClientByPassport(@RequestParam String passport, HttpSession httpSession, Model model) {
         Client client = clientService.findClientByPassport(passport);
         if (client == null) {
-            model.addAttribute("error_find_client", "Клиент не найден");
+            Lib.setAttribute(httpSession, "error_find_client", "Клиент не найден");
             return "redirect:/oper#find_client_by_passport";
         }
         httpSession.setAttribute("client", client);
@@ -67,10 +73,10 @@ public class ClientController {
                 passcode, passdate, sex, birthplace, reg);
         try {
             clientService.createClient(client);
-            model.addAttribute("report_create_client", "Клиент успешно создан.");
+            Lib.setAttribute(httpSession, "report_create_client", "Клиент успешно создан.");
         }
         catch (Exception e) {
-            model.addAttribute("error_create_client", "Клиент не создан. " + e.getMessage());
+            Lib.setAttribute(httpSession, "error_create_client", "Клиент не создан. " + e.getMessage());
         }
         return "redirect:/oper#create_client";
     }
@@ -96,10 +102,10 @@ public class ClientController {
         try {
             clientService.updateClient(editclient);
             httpSession.setAttribute("client", editclient);
-            model.addAttribute("report_create_client", "Данные клиента успешно обновлены.");
+            Lib.setAttribute(httpSession, "report_create_client", "Данные клиента успешно обновлены.");
         }
         catch (Exception e) {
-            model.addAttribute("error_create_client", "Данные клиента не обновлены. " +
+            Lib.setAttribute(httpSession, "error_create_client", "Данные клиента не обновлены. " +
                     e.getMessage());
         }
         return "redirect:/operwork#edit_client";

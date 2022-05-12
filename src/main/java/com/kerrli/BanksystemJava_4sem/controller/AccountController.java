@@ -25,6 +25,13 @@ public class AccountController {
     public String createAccount(@RequestParam String currencyCode, HttpSession httpSession, Model model) {
         int idClient = ((Client) httpSession.getAttribute("client")).getId();
         Account account = accountService.createAccount(idClient, currencyCode, "40817", "Счет физ. лица");
+        Lib.setAttribute(httpSession, "report_create_account", "Счет успешно создан.");
         return "redirect:/operwork#create_account";
+    }
+
+    @PostMapping("/close_account")
+    public String closeAccount(@RequestParam String accountNum, HttpSession httpSession, Model model) {
+
+        return "redirect:/operwork#close_account";
     }
 }

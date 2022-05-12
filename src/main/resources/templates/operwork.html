@@ -122,22 +122,22 @@
             <div class="form">
                 <a class="anchor" id="close_account"></a>
                 <div class="form-name"><p>Закрыть счет</p></div>
-                <form action="vendor/close_account.php" method="POST">
-                    <?php if (client_account_count($_SESSION["client"]["id"], true) > 0) { /* есть счета 40817 с нулевым остатком */  ?>
+                <form action="/close_account" method="POST">
                     <div class="form-content">
                         <p>Выберите счет</p>
-                        <label><div class="select-block"><select name="accountnum" required>
-                            <option selected></option>
-                            <?php echo out_account_box($_SESSION["client"]["id"], "", true); ?>
-                        </select></div></label>
+                        <label><div class="select-block">
+                            <select class="form-control" name="accountNum">
+                                <option selected></option>
+                                <option th:each="account : ${zeroAccountList}" th:value="${account.accountNum}"
+                                        th:text="${account.getDescript()}"></option>
+                            </select>
+                        </div></label>
                     </div>
                     <div>
                         <input class="button" type="submit" value="Закрыть" title="Закрыть выбранный счёт">
                     </div>
-                    <label class="report"><?php echo session_message("message-close"); ?></label>
-                    <?php } else { /* нет подходящих счетов */ ?>
-                    <label class="information">Нет счетов с нулевым остатком</label>
-                    <?php } ?>
+                    <label class="report"><span th:text="${report_close_account}"></span></label>
+                    <label class="error"><span th:text="${error_close_account}"></span></label>
                 </form>
             </div>
         </div>

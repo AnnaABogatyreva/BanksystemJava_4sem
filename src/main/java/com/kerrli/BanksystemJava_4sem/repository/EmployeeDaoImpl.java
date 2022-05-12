@@ -20,9 +20,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
     public Employee findByLogin(String login) {
-        Transaction transaction = session.beginTransaction();
         Employee employee = session.get(Employee.class, login);
-        transaction.commit();
         return employee;
     }
 }
