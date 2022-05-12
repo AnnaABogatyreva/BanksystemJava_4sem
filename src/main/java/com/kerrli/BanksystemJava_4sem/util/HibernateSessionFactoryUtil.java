@@ -22,10 +22,10 @@ public final class HibernateSessionFactoryUtil {
                 configuration.addAnnotatedClass(Currency.class);
                 configuration.addAnnotatedClass(Account.class);
                 configuration.addAnnotatedClass(AccountCnt.class);
-                //configuration.addAnnotatedClass(AccountCnt.AccountCntKey.class);
                 configuration.addAnnotatedClass(Balance.class);
                 configuration.addAnnotatedClass(AccountType.class);
                 configuration.addAnnotatedClass(Operation.class);
+                configuration.addAnnotatedClass(OperDay.class);
                 StandardServiceRegistryBuilder builder =
                     new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
                 sessionFactory = configuration.buildSessionFactory(builder.build());

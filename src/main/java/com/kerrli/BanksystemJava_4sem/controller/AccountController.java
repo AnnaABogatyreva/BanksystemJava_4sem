@@ -22,7 +22,7 @@ public class AccountController {
     }
 
     @PostMapping("/create_account")
-    public String createAccount(@RequestParam String currencyCode, HttpSession httpSession, Model model) {
+    public String createAccount(@RequestParam String currencyCode, HttpSession httpSession) {
         int idClient = ((Client) httpSession.getAttribute("client")).getId();
         Account account = accountService.createAccount(idClient, currencyCode, "40817", "Счет физ. лица");
         Lib.setAttribute(httpSession, "report_create_account", "Счет успешно создан.");
@@ -30,8 +30,14 @@ public class AccountController {
     }
 
     @PostMapping("/close_account")
-    public String closeAccount(@RequestParam String accountNum, HttpSession httpSession, Model model) {
-
+    public String closeAccount(@RequestParam String accountNum, HttpSession httpSession) {
+        try {
+            Account account = accountService.closeAccount(accountNum);
+            Lib.setAttribute(httpSession, "report_close_account", "Счет закрыт.");
+        }
+        catch (Exception e) {
+            Lib.setAttribute(httpSession, "error_close_account", "Счет не закрыт. " + e.getMessage());
+        }
         return "redirect:/operwork#close_account";
     }
 }

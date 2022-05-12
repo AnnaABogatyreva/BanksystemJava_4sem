@@ -12,9 +12,11 @@ import java.util.List;
 public interface AccountDao {
     Session getSession();
 
-    boolean startTransaction();
+    boolean beginTransaction();
 
-    void stopTransaction(boolean canStopTransaction);
+    void commitTransaction(boolean canStopTransaction);
+
+    void rollbackTransaction(boolean canStopTransaction);
 
     String generateAccountNum(String acc2p, String currencyCode);
 
@@ -24,7 +26,7 @@ public interface AccountDao {
 
     String getSelectBlockLine(Account accountNum);
 
-    Account closeAccount(String accountNum);
+    Account closeAccount(String accountNum) throws Exception;
 
     List getZeroAccountList(int idClient);
 }

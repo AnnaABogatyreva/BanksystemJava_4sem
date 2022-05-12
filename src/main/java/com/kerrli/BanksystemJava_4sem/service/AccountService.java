@@ -21,7 +21,7 @@ public class AccountService {
         return accountDao.getZeroAccountList(idClient);
     }
 
-    public String getSelectBlockLine(Account account) {
-        return accountDao.getSelectBlockLine(account);
+    public Account closeAccount(String accountNum) throws Exception {
+        return accountDao.closeAccount(accountNum);
     }
 }

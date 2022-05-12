@@ -1,9 +1,6 @@
 package com.kerrli.BanksystemJava_4sem.repository;
 
-import com.kerrli.BanksystemJava_4sem.entity.Account;
-import com.kerrli.BanksystemJava_4sem.entity.AccountCnt;
-import com.kerrli.BanksystemJava_4sem.entity.AccountType;
-import com.kerrli.BanksystemJava_4sem.entity.Currency;
+import com.kerrli.BanksystemJava_4sem.entity.*;
 import com.kerrli.BanksystemJava_4sem.util.HibernateSessionFactoryUtil;
 import com.kerrli.BanksystemJava_4sem.util.Lib;
 import org.hibernate.Session;
@@ -29,7 +26,7 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public boolean startTransaction() {
+    public boolean beginTransaction() {
         Transaction transaction;
         boolean canStopTransaction;
         if (!session.getTransaction().isActive()) {
@@ -44,14 +41,20 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public void stopTransaction(boolean canStopTransaction) {
+    public void commitTransaction(boolean canStopTransaction) {
         if (canStopTransaction)
             session.getTransaction().commit();
     }
 
     @Override
+    public void rollbackTransaction(boolean canStopTransaction) {
+        if (canStopTransaction)
+            session.getTransaction().rollback();
+    }
+
+    @Override
     public String generateAccountNum(String acc2p, String currencyCode) {
-        boolean transaction = startTransaction();
+        boolean transaction = beginTransaction();
         int cnt;
         try {
             String queryString = "FROM AccountCnt WHERE acc2p = :acc2p AND currency = :currency";
@@ -74,13 +77,13 @@ public class AccountDaoImpl implements AccountDao {
         String accountNum = acc2p + currencyCode + "20000" + String.format("%07d", cnt);
         AccountCnt accountCnt = new AccountCnt(acc2p, currencyCode, cnt);
         session.merge(accountCnt);
-        stopTransaction(transaction);
+        commitTransaction(transaction);
         return accountNum;
     }
 
     @Override
     public Account createAccount(int idClient, String currencyCode, String acc2p, String descript) {
-        boolean transaction = startTransaction();
+        boolean transaction = beginTransaction();
         String accountNum = generateAccountNum(acc2p, currencyCode);
         String queryString = "SELECT COUNT(a) FROM Account a " +
                 "WHERE idClient = :idClient AND closed IS NULL AND currency = :currency";
@@ -91,7 +94,7 @@ public class AccountDaoImpl implements AccountDao {
         int def = (cnt > 0) ? 0 : 1;
         Account account = new Account(idClient, accountNum, currencyCode, descript, null, def);
         session.merge(account);
-        stopTransaction(transaction);
+        commitTransaction(transaction);
         return account;
     }
 
@@ -139,23 +142,6 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public String getSelectBlockLine(Account account) {
-        Currency currency = session.get(Currency.class, account.getCurrency());
-        AccountType accountType = session.get(AccountType.class, account.getAcc2p());
-        String res = "Счет №" + account.getAccountNum() + ": " + Lib.formatSum(checkBalance(account.getAccountNum())) +
-                " " + currency.getIsoCode() + ", " + account.getDescript() + " (" + accountType.getDispType() + ")";
-        return res;
-    }
-
-    @Override
-    public Account closeAccount(String accountNum) {
-        boolean transaction = startTransaction();
-
-        stopTransaction(transaction);
-        return null;
-    }
-
-    @Override
     public List getZeroAccountList(int idClient) {
         String queryString = "FROM Account a WHERE a.closed IS NULL AND a.idClient = :idClient";
         Query query = session.createQuery(queryString, Account.class);
@@ -172,5 +158,51 @@ public class AccountDaoImpl implements AccountDao {
 
         }
         return res;
+    }
+
+    @Override
+    public String getSelectBlockLine(Account account) {
+        Currency currency = session.get(Currency.class, account.getCurrency());
+        AccountType accountType = session.get(AccountType.class, account.getAcc2p());
+        String res = "Счет №" + account.getAccountNum() + ": " + Lib.formatSum(checkBalance(account.getAccountNum())) +
+                " " + currency.getIsoCode() + ", " + account.getDescript() + " (" + accountType.getDispType() + ")";
+        return res;
+    }
+
+    @Override
+    public Account closeAccount(String accountNum) throws Exception {
+        boolean transaction = beginTransaction();
+        double balance = checkBalance(accountNum);
+        if (Math.abs(balance) < 0.005) {
+            Account closeAccount = session.get(Account.class, accountNum);
+            String queryString = "SELECT COUNT(a) FROM Account a " +
+                    "WHERE a.idClient = :idClient AND a.closed IS NULL AND a.currency = :currency";
+            Query query = session.createQuery(queryString, Long.class);
+            query.setParameter("idClient", closeAccount.getIdClient());
+            query.setParameter("currency", closeAccount.getCurrency());
+            Long cntAccount = (Long) query.getSingleResult();
+            if (closeAccount.getDef() == 1 && cntAccount > 1) {
+                queryString = "SELECT a FROM Account a " +
+                        "WHERE a.idClient = :idClient AND a.closed IS NULL AND a.currency = :currency AND a.def = 0";
+                query = session.createQuery(queryString, Account.class);
+                query.setParameter("idClient", closeAccount.getIdClient());
+                query.setParameter("currency", closeAccount.getCurrency());
+                query.setMaxResults(1);
+                Account account = (Account) query.getSingleResult();
+                account.setDef(1);
+                session.merge(account);
+            }
+            closeAccount.setDef(0);
+            queryString = "FROM OperDay o WHERE o.current = 1";
+            OperDay operDay = session.createQuery(queryString, OperDay.class).getSingleResult();
+            closeAccount.setClosed(operDay.getOperDate());
+            session.merge(closeAccount);
+            commitTransaction(transaction);
+            return closeAccount;
+        }
+        else {
+            rollbackTransaction(transaction);
+            throw new Exception("Остаток счета ненулевой.");
+        }
     }
 }

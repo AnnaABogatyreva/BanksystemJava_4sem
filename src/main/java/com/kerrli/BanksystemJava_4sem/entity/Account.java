@@ -34,6 +34,10 @@ public class Account {
         this.def = def;
     }
 
+    public int getIdClient() {
+        return idClient;
+    }
+
     public String getAccountNum() {
         return accountNum;
     }
@@ -48,6 +52,18 @@ public class Account {
 
     public String getDescript() {
         return descript;
+    }
+
+    public int getDef() {
+        return def;
+    }
+
+    public void setDef(int def) {
+        this.def = def;
+    }
+
+    public void setClosed(Date closed) {
+        this.closed = closed;
     }
 
     public void setDescript(String descript) {
