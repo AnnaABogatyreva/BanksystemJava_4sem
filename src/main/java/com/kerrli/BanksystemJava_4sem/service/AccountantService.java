@@ -2,6 +2,8 @@ package com.kerrli.BanksystemJava_4sem.service;
 
 import com.kerrli.BanksystemJava_4sem.repository.AccountantDaoImpl;
 
+import java.util.Date;
+
 public class AccountantService {
     private AccountantDaoImpl accountantDao;
 
@@ -22,5 +24,9 @@ public class AccountantService {
             throw new Exception("Заданы неверные курсы валюты. ");
         }
         accountantDao.setCourse(currency, buy, cost, sell);
+    }
+
+    public void changeOperDate(Date date) throws Exception {
+        accountantDao.changeOperDate(date);
     }
 }

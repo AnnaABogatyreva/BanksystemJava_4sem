@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 
 @Controller
 public class AccountantController {
@@ -16,6 +17,21 @@ public class AccountantController {
 
     public AccountantController() {
         accountantService = new AccountantService();
+    }
+
+    @PostMapping("/change_operdate")
+    public String changeOperDate(@RequestParam String dateString, HttpSession httpSession) {
+        try {
+            Date date = Lib.parseDate(dateString);
+            accountantService.changeOperDate(date);
+            Lib.setAttribute(httpSession, "report_change_operdate",
+                    "Установлена дата " + Lib.formatDate(date, "dd.MM.yyyy"));
+        }
+        catch (Exception e) {
+            Lib.setAttribute(httpSession, "error_change_operdate", "Ошибка при установке даты. " +
+                    e.getMessage());
+        }
+        return "redirect:/acc#change_operdate";
     }
 
     @PostMapping("/change_currency_cost")
