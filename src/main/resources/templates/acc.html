@@ -55,27 +55,40 @@
             <div class="form">
                 <a class="anchor" id="transaction_acc"></a>
                 <div class="form-name"><p>Перевод средств между кассами и счетами банка</p></div>
-                <form action="vendor/transaction_acc.php" method="POST">
-                    <div class="form-content"><p>Счет отправки перевода (дебета)</p>
-                        <label><div class="select-block"><select name="debit_accountnum" required>
-                            <option selected></option>
-                            <?php echo out_account_box(1, "out_acc"); ?>
-                        </select></div></label>
+                <form action="/transaction_acc" method="POST">
+                    <div th:unless="${bankAccountList.isEmpty()}">
+                        <div class="form-content"><p>Счет отправки перевода (дебета)</p>
+                            <label><div class="select-block">
+                                <select class="form-control" name="debitAccountNum">
+                                    <option selected></option>
+                                    <option th:each="account : ${bankAccountList}" th:value="${account.accountNum}"
+                                            th:text="${account.getUpDescript()}"></option>
+                                </select>
+                            </div></label>
+                        </div>
+                        <div class="form-content"><p>Счет приема перевода (кредита)</p>
+                            <label><div class="select-block">
+                                <select class="form-control" name="creditAccountNum">
+                                    <option selected></option>
+                                    <option th:each="account : ${bankAccountList}" th:value="${account.accountNum}"
+                                            th:text="${account.getUpDescript()}"></option>
+                                </select>
+                            </div></label>
+                        </div>
+                        <div>
+                            <label>Сумма перевода<input pattern="^\d+(\.\d{1,2}|)$" name="sum"
+                                                        required placeholder="100.00"></label>
+                        </div>
+                        <div>
+                            <input class="button" type="submit" value="Перевести"
+                                   title="Перевести указанную сумму между счетами банка">
+                        </div>
                     </div>
-                    <div class="form-content"><p>Счет приема перевода (кредита)</p>
-                        <label><div class="select-block"><select name="credit_accountnum" required>
-                            <option selected></option>
-                            <?php echo out_account_box(1, "out_acc"); ?>
-                        </select></div></label>
+                    <div th:if="${bankAccountList.isEmpty()}">
+                        <label class="information">Нет открытых счетов</label>
                     </div>
-
-                    <div>
-                        <label>Сумма перевода<input pattern="^\d+(\.\d{1,2}|)$" name="sum" required placeholder="100.00"></label>
-                    </div>
-                    <div>
-                        <input class="button" type="submit" value="Перевести" title="Перевести указанную сумму между счетами банка">
-                    </div>
-                    <label class="report"><?php echo session_message("message-transaction_acc"); ?></label>
+                    <label class="report"><span th:text="${report_transaction_acc}"></span></label>
+                    <label class="error"><span th:text="${error_transaction_acc}"></span></label>
                 </form>
             </div>
         </div>
@@ -83,25 +96,37 @@
             <div class="form">
                 <a class="anchor" id="change_currency_cost"></a>
                 <div class="form-name"><p>Обновить курс валют</p></div>
-                <form action="vendor/change_currency_cost.php" method="POST">
+                <form action="/change_currency_cost" method="POST">
                     <div class="form-content">
                         <p>Валюта</p>
-                        <?php
-							$mysqli = get_sql_connection();
-							$result = $mysqli->query("SELECT * FROM currency WHERE code != '810'");
-                        $cnt = 0;
-                        foreach ($result as $res) {
-                        echo '<div class="radio-currency"><input type="radio" name="currency" value="' . $res["code"] . '"' .
-                        ($cnt == 0 ? 'checked=1' : '') . '>' . '<label>' . $res["isocode"] . " (" . $res["name"] . ')</label></div>';
-                        $cnt++;
-                        }
-                        ?>
+                        <label><div class="select-block">
+                            <select class="form-control" name="currency">
+                                <option selected></option>
+                                <option th:each="currency : ${foreignCurrencyList}" th:value="${currency.code}"
+                                        th:text="${currency.name}"></option>
+                            </select>
+                        </div></label>
                     </div>
-                    <div><label>Стоимость покупки в рублях<input pattern="^\d+(\.\d{1,2}|)$" name="buy_sum" required placeholder="100.00"></label></div>
-                    <div><label>Стоимость, установленная ЦБ в рублях<input pattern="^\d+(\.\d{1,2}|)$" name="cost_sum" required placeholder="100.00"></label></div>
-                    <div><label>Стоимость продажи в рублях<input pattern="^\d+(\.\d{1,2}|)$" name="sell_sum" required placeholder="100.00"></label></div>
-                    <div><input class="button" type="submit" value="Обновить" title="Обновить текущий курс валют"></div>
-                    <label class="report"><?php echo session_message("message-currency_cost"); ?></label>
+                    <div>
+                        <label>Стоимость покупки в рублях
+                            <input pattern="^\d+(\.\d{1,2}|)$" name="buy" required placeholder="100.00">
+                        </label>
+                    </div>
+                    <div>
+                        <label>Стоимость, установленная ЦБ в рублях
+                            <input pattern="^\d+(\.\d{1,2}|)$" name="cost" required placeholder="100.00">
+                        </label>
+                    </div>
+                    <div>
+                        <label>Стоимость продажи в рублях
+                            <input pattern="^\d+(\.\d{1,2}|)$" name="sell" required placeholder="100.00">
+                        </label>
+                    </div>
+                    <div>
+                        <input class="button" type="submit" value="Обновить" title="Обновить текущий курс валют">
+                    </div>
+                    <label class="report"><span th:text="${report_change_currency_cost}"></span></label>
+                    <label class="error"><span th:text="${error_change_currency_cost}"></span></label>
                 </form>
             </div>
         </div>

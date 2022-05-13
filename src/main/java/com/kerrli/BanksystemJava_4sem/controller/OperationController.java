@@ -69,7 +69,7 @@ public class OperationController {
         }
         return "redirect:/operwork#transaction_in";
     }
-    
+
     @PostMapping("/transaction_out")
     public String transactionOut(@RequestParam String debitAccountNum, @RequestParam String phone,
                                 @RequestParam double sum, HttpSession httpSession) {
@@ -84,5 +84,19 @@ public class OperationController {
             Lib.setAttribute(httpSession, "error_transaction_out", e.getMessage());
         }
         return "redirect:/operwork#transaction_out";
+    }
+
+    @PostMapping("/transaction_acc")
+    public String transactionAcc(@RequestParam String debitAccountNum, @RequestParam String creditAccountNum,
+                                @RequestParam double sum, HttpSession httpSession) {
+        Employee employee = (Employee) httpSession.getAttribute("employee");
+        try {
+            operationService.transaction(debitAccountNum, creditAccountNum, sum, employee.getLogin());
+            Lib.setAttribute(httpSession, "report_transaction_acc", "Успешный перевод. ");
+        }
+        catch (Exception e) {
+            Lib.setAttribute(httpSession, "error_transaction_acc", e.getMessage());
+        }
+        return "redirect:/acc#transaction_acc";
     }
 }

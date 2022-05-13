@@ -22,4 +22,8 @@ public class CurrencyService {
     public List getCurrencyList() {
         return currencyDao.getCurrencyList();
     }
+
+    public List getForeignCurrencyList() {
+        return currencyDao.getForeignCurrencyList();
+    }
 }

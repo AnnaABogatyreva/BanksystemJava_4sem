@@ -3,13 +3,9 @@ package com.kerrli.BanksystemJava_4sem.repository;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
-public interface CurrencyDao {
+public interface AccountantDao {
     Session getSession();
 
-    List getCurrencyList();
-
-    List getForeignCurrencyList();
+    void setCourse(String currency, double buy, double cost, double sell) throws Exception;
 }

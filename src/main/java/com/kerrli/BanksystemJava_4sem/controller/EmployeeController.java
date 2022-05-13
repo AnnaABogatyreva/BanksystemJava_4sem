@@ -3,13 +3,19 @@ package com.kerrli.BanksystemJava_4sem.controller;
 import com.kerrli.BanksystemJava_4sem.entity.Client;
 import com.kerrli.BanksystemJava_4sem.entity.Employee;
 import com.kerrli.BanksystemJava_4sem.entity.Emprole;
+import com.kerrli.BanksystemJava_4sem.repository.AccountDaoImpl;
+import com.kerrli.BanksystemJava_4sem.repository.CurrencyDaoImpl;
+import com.kerrli.BanksystemJava_4sem.service.AccountService;
+import com.kerrli.BanksystemJava_4sem.service.CurrencyService;
 import com.kerrli.BanksystemJava_4sem.service.EmployeeService;
 import com.kerrli.BanksystemJava_4sem.util.Lib;
+import org.hibernate.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class EmployeeController {
@@ -56,6 +62,11 @@ public class EmployeeController {
         String emprole = (String) httpSession.getAttribute("emprole");
         model.addAttribute("emprole", emprole);
         model.addAttribute("operdate", Lib.formatDate(employeeService.getOperDate(), "dd.MM.yyyy"));
+        Session tempSession = employeeService.getEmployeeDao().getSession();
+        List foreignCurrencyList = new CurrencyService(new CurrencyDaoImpl(tempSession)).getForeignCurrencyList();
+        model.addAttribute("foreignCurrencyList", foreignCurrencyList);
+        List bankAccountList = new AccountService(new AccountDaoImpl(tempSession)).getBankAccountList();
+        model.addAttribute("bankAccountList", bankAccountList);
         if (employee.getRole().compareTo("admin") == 0 || employee.getRole().compareTo("accountant") == 0) {
             Lib.moveAttributeToModel(httpSession, model);
             return "acc";

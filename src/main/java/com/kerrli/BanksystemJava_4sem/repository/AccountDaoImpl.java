@@ -120,7 +120,8 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public List getZeroAccountList(int idClient) {
-        String queryString = "FROM Account a WHERE a.closed IS NULL AND a.idClient = :idClient";
+        String queryString = "FROM Account a " +
+                "WHERE a.closed IS NULL AND a.idClient = :idClient AND SUBSTRING(a.accountNum, 1, 5) IN ('40817')";
         Query query = session.createQuery(queryString, Account.class);
         query.setParameter("idClient", idClient);
         List list = query.getResultList();
@@ -139,9 +140,26 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public List getAccountList(int idClient) {
-        String queryString = "FROM Account a WHERE a.closed IS NULL AND a.idClient = :idClient";
+        String queryString = "FROM Account a " +
+                "WHERE a.closed IS NULL AND a.idClient = :idClient AND SUBSTRING(a.accountNum, 1, 5) IN ('40817')";
         Query query = session.createQuery(queryString, Account.class);
         query.setParameter("idClient", idClient);
+        List list = query.getResultList();
+        List res = new ArrayList();
+        for (int i = 0; i < list.size(); i++) {
+            Account account = (Account) list.get(i);
+            AccountExt accountExt = new AccountExt(account, getSelectBlockLine(account));
+            res.add(accountExt);
+        }
+        return res;
+    }
+
+    @Override
+    public List getBankAccountList() {
+        String queryString = "FROM Account a " +
+                "WHERE a.closed IS NULL AND a.idClient = 1 " +
+                "AND SUBSTRING(a.accountNum, 1, 5) IN ('20202', '70601', '70606')";
+        Query query = session.createQuery(queryString, Account.class);
         List list = query.getResultList();
         List res = new ArrayList();
         for (int i = 0; i < list.size(); i++) {

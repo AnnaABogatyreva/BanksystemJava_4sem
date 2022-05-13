@@ -25,4 +25,6 @@ public interface AccountDao {
     List getZeroAccountList(int idClient);
 
     List getAccountList(int idClient);
+
+    List getBankAccountList();
 }

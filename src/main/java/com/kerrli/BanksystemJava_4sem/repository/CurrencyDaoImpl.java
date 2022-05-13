@@ -29,4 +29,10 @@ public class CurrencyDaoImpl implements CurrencyDao {
         return session.createQuery("FROM Currency", Currency.class).getResultList();
     }
 
+    @Override
+    public List getForeignCurrencyList() {
+        return session.createQuery("FROM Currency c WHERE c.code != '810'",
+                Currency.class).getResultList();
+    }
+
 }

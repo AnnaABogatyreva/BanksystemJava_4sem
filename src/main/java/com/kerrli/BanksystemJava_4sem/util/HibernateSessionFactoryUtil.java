@@ -1,6 +1,7 @@
 package com.kerrli.BanksystemJava_4sem.util;
 
 import com.kerrli.BanksystemJava_4sem.entity.*;
+import com.kerrli.BanksystemJava_4sem.repository.AccountantDao;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;

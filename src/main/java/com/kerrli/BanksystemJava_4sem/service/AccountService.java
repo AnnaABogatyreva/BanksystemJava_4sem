@@ -32,6 +32,10 @@ public class AccountService {
         return accountDao.getAccountList(idClient);
     }
 
+    public List getBankAccountList() {
+        return accountDao.getBankAccountList();
+    }
+
     public Account closeAccount(String accountNum) throws Exception {
         return accountDao.closeAccount(accountNum);
     }

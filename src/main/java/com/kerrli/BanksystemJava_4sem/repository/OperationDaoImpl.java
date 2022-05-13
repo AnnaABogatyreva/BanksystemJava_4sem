@@ -59,10 +59,7 @@ public class OperationDaoImpl implements OperationDao {
                 throw new Exception("Сумма проводки должна быть больше нуля: (" +
                         debitAccountNum + ", " + creditAccountNum + "): " + Lib.formatSum(sum) + ". ");
             if (sum > 0.00) {
-                String queryString = "SELECT o FROM OperDate o WHERE o.current = 1";
-                OperDate operDate = session.createQuery(queryString, OperDate.class).getSingleResult();
-                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
-                Date date = Lib.addTime(operDate.getOperDate(), calendar.getTime());
+                Date date = Lib.getTempDate(session);
                 Operation operation = new Operation(debitAccountNum, creditAccountNum, date, sum, loginEmployee);
                 session.merge(operation);
             }
