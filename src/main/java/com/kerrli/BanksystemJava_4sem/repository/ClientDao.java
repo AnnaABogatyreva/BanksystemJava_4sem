@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 public interface ClientDao {
     Session getSession();
     
-    Client findByPhone(String phone);
+    Client findByPhone(String phone) throws Exception;
 
     Client findByPassport(String passport);
 

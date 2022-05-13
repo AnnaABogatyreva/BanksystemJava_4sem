@@ -30,12 +30,34 @@ public class Lib {
         return string;
     }
 
+    public static String formatTime(Date time) {
+        String string = "";
+        if (time != null) {
+            DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+            string = dateFormat.format(time);
+        }
+        return string;
+    }
+
     public static Date addTime(Date date, String time) {
         Date dateTime = null;
         try {
             String dateString = formatDate(date) + " " + time;
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
             dateTime = formatter.parse(dateString);
+        }
+        catch (Exception e) {}
+        return dateTime;
+    }
+
+    public static Date addTime(Date date, Date time) {
+        String dateString = formatDate(date);
+        String timeString = formatTime(time);
+        String dateTimeString = dateString + " " + timeString;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        Date dateTime = date;
+        try {
+            dateTime = formatter.parse(dateTimeString);
         }
         catch (Exception e) {}
         return dateTime;

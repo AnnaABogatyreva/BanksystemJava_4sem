@@ -27,11 +27,17 @@ public class ClientDaoImpl implements ClientDao {
     }
 
     @Override
-    public Client findByPhone(String phone) {
+    public Client findByPhone(String phone) throws Exception {
         String queryString = "SELECT c FROM Client c WHERE c.phone = :phone";
         Query query = session.createQuery(queryString, Client.class);
         query.setParameter("phone", phone);
-        Client client = (Client) query.list().get(0);
+        Client client = null;
+        try {
+            client = (Client) query.list().get(0);
+        }
+        catch (Exception e) {
+            throw new Exception("Клиент с номером телефона \"" + phone + "\" не найден. ");
+        }
         return client;
     }
 

@@ -1,15 +1,13 @@
 package com.kerrli.BanksystemJava_4sem.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "operations")
 public class Operation {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idoper")
     private int idOper;
     @Column(name = "db")

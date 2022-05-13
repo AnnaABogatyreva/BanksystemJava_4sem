@@ -18,7 +18,7 @@ public class ClientService {
         return clientDao;
     }
 
-    public Client findClientByPhone(String phone) {
+    public Client findClientByPhone(String phone) throws Exception {
         return clientDao.findByPhone(phone);
     }
 

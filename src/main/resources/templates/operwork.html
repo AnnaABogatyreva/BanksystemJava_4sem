@@ -254,7 +254,7 @@
                     <div th:unless="${accountList.isEmpty()}">
                         <div class="form-content"><p>Счет отправки перевода</p>
                             <label><div class="select-block">
-                                <select class="form-control" name="creditAccountNum">
+                                <select class="form-control" name="debitAccountNum">
                                     <option selected></option>
                                     <option th:each="account : ${accountList}" th:value="${account.accountNum}"
                                             th:text="${account.getUpDescript()}"></option>
@@ -262,13 +262,18 @@
                             </div></label>
                         </div>
                         <div>
-                            <label>Перевод клиенту по номеру телефона:<input type="tel" name="credit_phone" required placeholder="Номер телефона"></label>
+                            <label>Перевод клиенту по номеру телефона:
+                                <input type="tel" name="phone" required placeholder="Номер телефона">
+                            </label>
                         </div>
                         <div>
-                            <label>Сумма перевода<input pattern="^\d+(\.\d{1,2}|)$" name="sum" required placeholder="100.00"></label>
+                            <label>Сумма перевода
+                                <input pattern="^\d+(\.\d{1,2}|)$" name="sum" required placeholder="100.00">
+                            </label>
                         </div>
                         <div>
-                            <input class="button" type="submit" value="Перевести" title="Перевести средства на выбранный счёт получателя">
+                            <input class="button" type="submit" value="Перевести"
+                                   title="Перевести средства на выбранный счёт получателя">
                         </div>
                     </div>
                     <div th:if="${accountList.isEmpty()}">

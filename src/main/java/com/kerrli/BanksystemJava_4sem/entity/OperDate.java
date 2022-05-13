@@ -33,4 +33,8 @@ public class OperDate {
     public void setCurrent(int current) {
         this.current = current;
     }
+
+    public void setOperDate(Date operDate) {
+        this.operDate = operDate;
+    }
 }
