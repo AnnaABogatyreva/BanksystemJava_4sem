@@ -30,6 +30,15 @@ public class Lib {
         return string;
     }
 
+    public static String formatDate(Date date, String format) {
+        String string = "";
+        if (date != null) {
+            DateFormat dateFormat = new SimpleDateFormat(format);
+            string = dateFormat.format(date);
+        }
+        return string;
+    }
+
     public static String formatTime(Date time) {
         String string = "";
         if (time != null) {

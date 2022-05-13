@@ -4,6 +4,8 @@ import com.kerrli.BanksystemJava_4sem.repository.EmployeeDaoImpl;
 import com.kerrli.BanksystemJava_4sem.entity.Employee;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class EmployeeService {
     private EmployeeDaoImpl employeeDao;
@@ -27,5 +29,9 @@ public class EmployeeService {
     public boolean checkPassword(String login, String password) {
         Employee employee = employeeDao.findByLogin(login);
         return employee.getPassword().compareTo(Employee.hashPassword(password)) == 0;
+    }
+
+    public Date getOperDate() {
+        return employeeDao.getOperDate();
     }
 }

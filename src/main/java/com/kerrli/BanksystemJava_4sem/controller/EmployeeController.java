@@ -2,6 +2,7 @@ package com.kerrli.BanksystemJava_4sem.controller;
 
 import com.kerrli.BanksystemJava_4sem.entity.Client;
 import com.kerrli.BanksystemJava_4sem.entity.Employee;
+import com.kerrli.BanksystemJava_4sem.entity.Emprole;
 import com.kerrli.BanksystemJava_4sem.service.EmployeeService;
 import com.kerrli.BanksystemJava_4sem.util.Lib;
 import org.springframework.stereotype.Controller;
@@ -39,6 +40,8 @@ public class EmployeeController {
     public String oper(HttpSession httpSession, Model model) {
         Employee employee = (Employee) httpSession.getAttribute("employee");
         model.addAttribute("employee", employee);
+        String emprole = (String) httpSession.getAttribute("emprole");
+        model.addAttribute("emprole", emprole);
         if (employee.getRole().compareTo("admin") == 0 || employee.getRole().compareTo("operator") == 0) {
             Lib.moveAttributeToModel(httpSession, model);
             return "oper";
@@ -50,6 +53,9 @@ public class EmployeeController {
     public String acc(HttpSession httpSession, Model model) {
         Employee employee = (Employee) httpSession.getAttribute("employee");
         model.addAttribute("employee", employee);
+        String emprole = (String) httpSession.getAttribute("emprole");
+        model.addAttribute("emprole", emprole);
+        model.addAttribute("operdate", Lib.formatDate(employeeService.getOperDate(), "dd.MM.yyyy"));
         if (employee.getRole().compareTo("admin") == 0 || employee.getRole().compareTo("accountant") == 0) {
             Lib.moveAttributeToModel(httpSession, model);
             return "acc";
@@ -64,6 +70,10 @@ public class EmployeeController {
         boolean passOk = employeeService.checkPassword(login, password);
         if (passOk) {
             Employee employee = employeeService.findUser(login);
+            Emprole emprole = (Emprole) employeeService.getEmployeeDao().getSession().get(Emprole.class,
+                    employee.getRole());
+            httpSession.setAttribute("emprole", emprole.getDescript());
+            model.addAttribute("emprole", emprole.getDescript());
             httpSession.setAttribute("employee", employee);
             model.addAttribute("employee", employee);
             if (employee.getRole().compareTo("admin") == 0 || employee.getRole().compareTo("operator") == 0)

@@ -20,4 +20,8 @@ public class Emprole {
         this.role = role;
         this.descript = descript;
     }
+
+    public String getDescript() {
+        return descript;
+    }
 }

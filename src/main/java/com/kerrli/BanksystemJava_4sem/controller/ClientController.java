@@ -40,6 +40,8 @@ public class ClientController {
             return "redirect:/acc";
         }
         model.addAttribute("employee", employee);
+        String emprole = (String) httpSession.getAttribute("emprole");
+        model.addAttribute("emprole", emprole);
         Client client = (Client) httpSession.getAttribute("client");
         model.addAttribute("client", client);
         Lib.moveAttributeToModel(httpSession, model);
