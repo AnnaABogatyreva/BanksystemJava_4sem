@@ -8,16 +8,16 @@ import java.util.Date;
 
 @Entity
 @Table(name = "operdays")
-public class OperDay {
+public class OperDate {
     @Id
     @Column(name = "operdate")
     private Date operDate;
     @Column(name = "current")
     private int current;
 
-    public OperDay() {}
+    public OperDate() {}
 
-    public OperDay(Date operDate, int current) {
+    public OperDate(Date operDate, int current) {
         this.operDate = operDate;
         this.current = current;
     }

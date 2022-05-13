@@ -57,7 +57,7 @@ public class ClientController {
     public String findClientByPassport(@RequestParam String passport, HttpSession httpSession, Model model) {
         Client client = clientService.findClientByPassport(passport);
         if (client == null) {
-            Lib.setAttribute(httpSession, "error_find_client", "Клиент не найден");
+            Lib.setAttribute(httpSession, "error_find_client", "Клиент не найден. ");
             return "redirect:/oper#find_client_by_passport";
         }
         httpSession.setAttribute("client", client);
@@ -83,7 +83,7 @@ public class ClientController {
                 passcode, passdate, sex, birthplace, reg);
         try {
             clientService.createClient(client);
-            Lib.setAttribute(httpSession, "report_create_client", "Клиент успешно создан.");
+            Lib.setAttribute(httpSession, "report_create_client", "Клиент успешно создан. ");
         }
         catch (Exception e) {
             Lib.setAttribute(httpSession, "error_create_client", "Клиент не создан. " + e.getMessage());
@@ -112,7 +112,7 @@ public class ClientController {
         try {
             clientService.updateClient(editclient);
             httpSession.setAttribute("client", editclient);
-            Lib.setAttribute(httpSession, "report_create_client", "Данные клиента успешно обновлены.");
+            Lib.setAttribute(httpSession, "report_create_client", "Данные клиента успешно обновлены. ");
         }
         catch (Exception e) {
             Lib.setAttribute(httpSession, "error_create_client", "Данные клиента не обновлены. " +

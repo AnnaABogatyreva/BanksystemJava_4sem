@@ -21,17 +21,17 @@ public class Operation {
     @Column(name = "`sum`")
     private double sum;
     @Column(name = "employee")
-    private int idEmployee;
+    private String loginEmployee;
 
     public Operation() {}
 
-    public Operation(int idOper, String debitAccountNum, String creditAccountNum,
-                     Date operDate, double sum, int idEmployee) {
-        this.idOper = idOper;
+    public Operation(String debitAccountNum, String creditAccountNum,
+                     Date operDate, double sum, String loginEmployee) {
+        this.idOper = 0;
         this.debitAccountNum = debitAccountNum;
         this.creditAccountNum = creditAccountNum;
         this.operDate = operDate;
         this.sum = sum;
-        this.idEmployee = idEmployee;
+        this.loginEmployee = loginEmployee;
     }
 }

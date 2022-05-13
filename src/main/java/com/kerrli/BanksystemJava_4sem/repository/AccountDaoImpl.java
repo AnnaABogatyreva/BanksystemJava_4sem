@@ -3,8 +3,8 @@ package com.kerrli.BanksystemJava_4sem.repository;
 import com.kerrli.BanksystemJava_4sem.entity.*;
 import com.kerrli.BanksystemJava_4sem.util.HibernateSessionFactoryUtil;
 import com.kerrli.BanksystemJava_4sem.util.Lib;
+import com.kerrli.BanksystemJava_4sem.util.LibTransaction;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +17,7 @@ public class AccountDaoImpl implements AccountDao {
     private Session session;
 
     public AccountDaoImpl() {
-        session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        this.session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
     }
 
     public AccountDaoImpl(Session session) {
@@ -30,35 +30,8 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public boolean beginTransaction() {
-        Transaction transaction;
-        boolean canStopTransaction;
-        if (!session.getTransaction().isActive()) {
-            transaction = session.beginTransaction();
-            canStopTransaction = true;
-        }
-        else {
-            transaction = session.getTransaction();
-            canStopTransaction = false;
-        }
-        return canStopTransaction;
-    }
-
-    @Override
-    public void commitTransaction(boolean canStopTransaction) {
-        if (canStopTransaction)
-            session.getTransaction().commit();
-    }
-
-    @Override
-    public void rollbackTransaction(boolean canStopTransaction) {
-        if (canStopTransaction)
-            session.getTransaction().rollback();
-    }
-
-    @Override
     public String generateAccountNum(String acc2p, String currencyCode) {
-        boolean transaction = beginTransaction();
+        boolean transaction = LibTransaction.beginTransaction(session);
         int cnt;
         try {
             String queryString = "FROM AccountCnt WHERE acc2p = :acc2p AND currency = :currency";
@@ -81,13 +54,13 @@ public class AccountDaoImpl implements AccountDao {
         String accountNum = acc2p + currencyCode + "20000" + String.format("%07d", cnt);
         AccountCnt accountCnt = new AccountCnt(acc2p, currencyCode, cnt);
         session.merge(accountCnt);
-        commitTransaction(transaction);
+        LibTransaction.commitTransaction(session, transaction);
         return accountNum;
     }
 
     @Override
     public Account createAccount(int idClient, String currencyCode, String acc2p, String descript) {
-        boolean transaction = beginTransaction();
+        boolean transaction = LibTransaction.beginTransaction(session);
         String accountNum = generateAccountNum(acc2p, currencyCode);
         String queryString = "SELECT COUNT(a) FROM Account a " +
                 "WHERE idClient = :idClient AND closed IS NULL AND currency = :currency";
@@ -98,7 +71,7 @@ public class AccountDaoImpl implements AccountDao {
         int def = (cnt > 0) ? 0 : 1;
         Account account = new Account(idClient, accountNum, currencyCode, descript, null, def);
         session.merge(account);
-        commitTransaction(transaction);
+        LibTransaction.commitTransaction(session, transaction);
         return account;
     }
 
@@ -190,7 +163,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public Account closeAccount(String accountNum) throws Exception {
-        boolean transaction = beginTransaction();
+        boolean transaction = LibTransaction.beginTransaction(session);
         double balance = checkBalance(accountNum);
         if (Math.abs(balance) < 0.005) {
             Account closeAccount = session.get(Account.class, accountNum);
@@ -213,14 +186,14 @@ public class AccountDaoImpl implements AccountDao {
             }
             closeAccount.setDef(0);
             queryString = "FROM OperDay o WHERE o.current = 1";
-            OperDay operDay = session.createQuery(queryString, OperDay.class).getSingleResult();
-            closeAccount.setClosed(operDay.getOperDate());
+            OperDate operDate = session.createQuery(queryString, OperDate.class).getSingleResult();
+            closeAccount.setClosed(operDate.getOperDate());
             session.merge(closeAccount);
-            commitTransaction(transaction);
+            LibTransaction.commitTransaction(session, transaction);
             return closeAccount;
         }
         else {
-            rollbackTransaction(transaction);
+            LibTransaction.rollbackTransaction(session, transaction);
             throw new Exception("Остаток счета ненулевой.");
         }
     }

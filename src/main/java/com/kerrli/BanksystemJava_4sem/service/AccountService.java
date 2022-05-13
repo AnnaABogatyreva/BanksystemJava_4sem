@@ -2,7 +2,6 @@ package com.kerrli.BanksystemJava_4sem.service;
 
 import com.kerrli.BanksystemJava_4sem.entity.Account;
 import com.kerrli.BanksystemJava_4sem.repository.AccountDaoImpl;
-import com.kerrli.BanksystemJava_4sem.repository.ClientDaoImpl;
 
 import java.util.List;
 
