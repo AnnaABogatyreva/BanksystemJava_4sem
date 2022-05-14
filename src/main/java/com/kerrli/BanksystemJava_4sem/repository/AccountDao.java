@@ -12,19 +12,27 @@ import java.util.List;
 public interface AccountDao {
     Session getSession();
 
+    @Query
     String generateAccountNum(String acc2p, String currencyCode);
 
+    @Query
     Account createAccount(int idClient, String currencyCode, String acc2p, String descript);
 
+    @Query
     double checkBalance(String accountNum);
 
+    @Query
     String getSelectBlockLine(Account accountNum);
 
+    @Query
     Account closeAccount(String accountNum) throws Exception;
 
+    @Query
     List getZeroAccountList(int idClient);
 
+    @Query
     List getAccountList(int idClient);
 
+    @Query
     List getBankAccountList();
 }

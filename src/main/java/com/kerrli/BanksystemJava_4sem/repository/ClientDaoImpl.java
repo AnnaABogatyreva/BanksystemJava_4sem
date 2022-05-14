@@ -26,6 +26,7 @@ public class ClientDaoImpl implements ClientDao {
         return session;
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public Client findByPhone(String phone) throws Exception {
         String queryString = "SELECT c FROM Client c WHERE c.phone = :phone";
@@ -41,6 +42,7 @@ public class ClientDaoImpl implements ClientDao {
         return client;
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public Client findByPassport(String passport) {
         String queryString = "SELECT c FROM Client c WHERE c.passport = :passport";
@@ -53,6 +55,7 @@ public class ClientDaoImpl implements ClientDao {
         return client;
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public void createClient(Client templateClient) {
         Transaction transaction = session.beginTransaction();
@@ -60,6 +63,7 @@ public class ClientDaoImpl implements ClientDao {
         transaction.commit();
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public void updateClient(Client client) {
         Transaction transaction = session.beginTransaction();

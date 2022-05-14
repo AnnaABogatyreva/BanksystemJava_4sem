@@ -4,9 +4,11 @@ import com.kerrli.BanksystemJava_4sem.entity.Client;
 import com.kerrli.BanksystemJava_4sem.entity.Employee;
 import com.kerrli.BanksystemJava_4sem.repository.AccountDaoImpl;
 import com.kerrli.BanksystemJava_4sem.repository.CurrencyDaoImpl;
+import com.kerrli.BanksystemJava_4sem.repository.DepositeDaoImpl;
 import com.kerrli.BanksystemJava_4sem.service.AccountService;
 import com.kerrli.BanksystemJava_4sem.service.ClientService;
 import com.kerrli.BanksystemJava_4sem.service.CurrencyService;
+import com.kerrli.BanksystemJava_4sem.service.DepositeService;
 import com.kerrli.BanksystemJava_4sem.util.Lib;
 import org.hibernate.Session;
 import org.springframework.stereotype.Controller;
@@ -23,7 +25,7 @@ import java.util.Map;
 
 @Controller
 public class ClientController {
-    private ClientService clientService;
+    private final ClientService clientService;
 
     public ClientController() {
         clientService = new ClientService();
@@ -52,11 +54,13 @@ public class ClientController {
         model.addAttribute("zeroAccountList", zeroAccountList);
         List accountList = new AccountService(new AccountDaoImpl(tempSession)).getAccountList(client.getId());
         model.addAttribute("accountList", accountList);
+        List depositeTypeList = new DepositeService(new DepositeDaoImpl(tempSession)).getDepositeList();
+        model.addAttribute("depositeTypeList", depositeTypeList);
         return "operwork";
     }
 
     @PostMapping("/find_client_by_passport")
-    public String findClientByPassport(@RequestParam String passport, HttpSession httpSession, Model model) {
+    public String findClientByPassport(@RequestParam String passport, HttpSession httpSession) {
         Client client = clientService.findClientByPassport(passport);
         if (client == null) {
             Lib.setAttribute(httpSession, "error_find_client", "Клиент не найден. ");
@@ -77,7 +81,7 @@ public class ClientController {
                                @RequestParam(defaultValue = "") String sex,
                                @RequestParam(defaultValue = "") String birthplace,
                                @RequestParam(defaultValue = "") String reg,
-                               HttpSession httpSession, Model model) {
+                               HttpSession httpSession) {
         Employee employee = (Employee) httpSession.getAttribute("employee");
         Date birthdate = Lib.parseDate(birthdateString);
         Date passdate = Lib.parseDate(passdateString);

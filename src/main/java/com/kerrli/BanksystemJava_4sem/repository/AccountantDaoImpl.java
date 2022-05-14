@@ -28,6 +28,7 @@ public class AccountantDaoImpl implements AccountantDao {
         return session;
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public void setCourse(String currency, double buy, double cost, double sell) throws Exception {
         boolean transaction = LibTransaction.beginTransaction(session);
@@ -47,6 +48,7 @@ public class AccountantDaoImpl implements AccountantDao {
         }
     }
 
+    @org.springframework.data.jpa.repository.Query
     private void updateBalance() throws Exception {
         String queryString = "SELECT o FROM OperDate o WHERE o.current = 1";
         OperDate oldOperDate = session.createQuery(queryString, OperDate.class).getSingleResult();
@@ -74,6 +76,7 @@ public class AccountantDaoImpl implements AccountantDao {
         }
     }
 
+    @org.springframework.data.jpa.repository.Query
     private void updateDate(Date date) throws Exception {
         String queryString = "UPDATE OperDate o SET o.current = 0 WHERE o.current = 1";
         Query query = session.createQuery(queryString);
@@ -87,6 +90,7 @@ public class AccountantDaoImpl implements AccountantDao {
         }
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public void changeOperDate(Date date) throws Exception {
         boolean transaction = LibTransaction.beginTransaction(session);

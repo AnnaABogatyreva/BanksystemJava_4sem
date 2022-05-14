@@ -7,12 +7,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CurrencyDao {
+public interface DepositeDao {
     Session getSession();
 
     @Query
-    List getCurrencyList();
+    List getDepositeList();
 
     @Query
-    List getForeignCurrencyList();
+    void createDeposite(String type, String debitAccountNum, double sum, String loginEmployee) throws Exception;
 }

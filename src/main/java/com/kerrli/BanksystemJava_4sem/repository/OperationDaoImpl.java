@@ -25,11 +25,13 @@ public class OperationDaoImpl implements OperationDao {
         this.session = session;
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public Session getSession() {
         return session;
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public void transaction(String debitAccountNum, String creditAccountNum,
                             double sum, String loginEmployee) throws Exception {
@@ -71,6 +73,7 @@ public class OperationDaoImpl implements OperationDao {
         LibTransaction.commitTransaction(session, transaction);
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public void convertation(String debitAccountNum, String creditAccountNum,
                              double sum, String loginEmployee) throws Exception {
@@ -114,6 +117,7 @@ public class OperationDaoImpl implements OperationDao {
         LibTransaction.commitTransaction(session, transaction);
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public Account getBankAccount(String accountNum, String mask) throws Exception {
         Account account = session.get(Account.class, accountNum);
@@ -127,6 +131,7 @@ public class OperationDaoImpl implements OperationDao {
         return bankAccount;
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public Account getDefaultAccount(Client client, String currency) throws Exception {
         String queryString = "SELECT a FROM Account a " +
@@ -156,6 +161,4 @@ public class OperationDaoImpl implements OperationDao {
         }
         return account;
     }
-
-
 }

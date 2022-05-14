@@ -29,6 +29,7 @@ public class AccountDaoImpl implements AccountDao {
         return session;
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public String generateAccountNum(String acc2p, String currencyCode) {
         boolean transaction = LibTransaction.beginTransaction(session);
@@ -58,6 +59,7 @@ public class AccountDaoImpl implements AccountDao {
         return accountNum;
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public Account createAccount(int idClient, String currencyCode, String acc2p, String descript) {
         boolean transaction = LibTransaction.beginTransaction(session);
@@ -75,6 +77,7 @@ public class AccountDaoImpl implements AccountDao {
         return account;
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public double checkBalance(String accountNum) {
         String queryString = "SELECT b.sum, b.date FROM Balance b " +
@@ -118,6 +121,7 @@ public class AccountDaoImpl implements AccountDao {
         return Lib.roundSum(sum);
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public List getZeroAccountList(int idClient) {
         String queryString = "FROM Account a " +
@@ -138,6 +142,7 @@ public class AccountDaoImpl implements AccountDao {
         return res;
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public List getAccountList(int idClient) {
         String queryString = "FROM Account a " +
@@ -154,6 +159,7 @@ public class AccountDaoImpl implements AccountDao {
         return res;
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public List getBankAccountList() {
         String queryString = "FROM Account a " +
@@ -170,6 +176,7 @@ public class AccountDaoImpl implements AccountDao {
         return res;
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public String getSelectBlockLine(Account account) {
         Currency currency = session.get(Currency.class, account.getCurrency());
@@ -179,6 +186,7 @@ public class AccountDaoImpl implements AccountDao {
         return res;
     }
 
+    @org.springframework.data.jpa.repository.Query
     @Override
     public Account closeAccount(String accountNum) throws Exception {
         boolean transaction = LibTransaction.beginTransaction(session);
