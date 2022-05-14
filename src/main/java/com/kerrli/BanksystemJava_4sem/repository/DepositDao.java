@@ -7,12 +7,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface DepositeDao {
+public interface DepositDao {
     Session getSession();
 
     @Query
-    List getDepositeList();
+    List getDepositTermList();
 
     @Query
-    void createDeposite(String type, String debitAccountNum, double sum, String loginEmployee) throws Exception;
+    List getDepositList(int idClient);
+
+    @Query
+    void createDeposit(String type, String debitAccountNum, double sum, String loginEmployee) throws Exception;
 }

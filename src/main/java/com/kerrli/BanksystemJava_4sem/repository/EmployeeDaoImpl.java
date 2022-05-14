@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Repository
 public class EmployeeDaoImpl implements EmployeeDao {
-    private Session session;
+    private final Session session;
 
     public EmployeeDaoImpl() {
         session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
@@ -29,8 +29,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Query
     @Override
     public Employee findByLogin(String login) {
-        Employee employee = session.get(Employee.class, login);
-        return employee;
+        return session.get(Employee.class, login);
     }
 
     @Query

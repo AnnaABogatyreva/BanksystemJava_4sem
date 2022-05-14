@@ -1,7 +1,6 @@
 package com.kerrli.BanksystemJava_4sem.util;
 
 import com.kerrli.BanksystemJava_4sem.entity.*;
-import com.kerrli.BanksystemJava_4sem.repository.AccountantDao;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -29,8 +28,8 @@ public final class HibernateSessionFactoryUtil {
                 configuration.addAnnotatedClass(OperDate.class);
                 configuration.addAnnotatedClass(Emprole.class);
                 configuration.addAnnotatedClass(Converter.class);
-                configuration.addAnnotatedClass(DepositeTerm.class);
-                configuration.addAnnotatedClass(Deposite.class);
+                configuration.addAnnotatedClass(DepositTerm.class);
+                configuration.addAnnotatedClass(Deposit.class);
                 configuration.addAnnotatedClass(CapTerm.class);
                 StandardServiceRegistryBuilder builder =
                     new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());

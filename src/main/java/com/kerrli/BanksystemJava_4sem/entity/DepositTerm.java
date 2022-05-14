@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "depositeterms")
-public class DepositeTerm {
+public class DepositTerm {
     @Id
     @Column(name = "`type`")
     private String type;
@@ -24,11 +24,11 @@ public class DepositeTerm {
     @Column(name = "currency")
     private String currency;
 
-    public DepositeTerm() {}
+    public DepositTerm() {}
 
-    public DepositeTerm(String type, int monthCnt, String cap, double rate, String descript, String currency) {
+    public DepositTerm(String type, Integer monthCnt, String cap, double rate, String descript, String currency) {
         this.type = type;
-        this.monthCnt = monthCnt;
+        this.monthCnt = (monthCnt == null) ? 0 : monthCnt;
         this.cap = cap;
         this.rate = rate;
         this.descript = descript;

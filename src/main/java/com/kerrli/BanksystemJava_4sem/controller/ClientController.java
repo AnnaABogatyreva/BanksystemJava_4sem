@@ -4,11 +4,11 @@ import com.kerrli.BanksystemJava_4sem.entity.Client;
 import com.kerrli.BanksystemJava_4sem.entity.Employee;
 import com.kerrli.BanksystemJava_4sem.repository.AccountDaoImpl;
 import com.kerrli.BanksystemJava_4sem.repository.CurrencyDaoImpl;
-import com.kerrli.BanksystemJava_4sem.repository.DepositeDaoImpl;
+import com.kerrli.BanksystemJava_4sem.repository.DepositDaoImpl;
 import com.kerrli.BanksystemJava_4sem.service.AccountService;
 import com.kerrli.BanksystemJava_4sem.service.ClientService;
 import com.kerrli.BanksystemJava_4sem.service.CurrencyService;
-import com.kerrli.BanksystemJava_4sem.service.DepositeService;
+import com.kerrli.BanksystemJava_4sem.service.DepositService;
 import com.kerrli.BanksystemJava_4sem.util.Lib;
 import org.hibernate.Session;
 import org.springframework.stereotype.Controller;
@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class ClientController {
@@ -54,8 +52,10 @@ public class ClientController {
         model.addAttribute("zeroAccountList", zeroAccountList);
         List accountList = new AccountService(new AccountDaoImpl(tempSession)).getAccountList(client.getId());
         model.addAttribute("accountList", accountList);
-        List depositeTypeList = new DepositeService(new DepositeDaoImpl(tempSession)).getDepositeList();
-        model.addAttribute("depositeTypeList", depositeTypeList);
+        List depositTermList = new DepositService(new DepositDaoImpl(tempSession)).getDepositTermList();
+        model.addAttribute("depositTermList", depositTermList);
+        List depositList = new DepositService(new DepositDaoImpl(tempSession)).getDepositList(client.getId());
+        model.addAttribute("depositList", depositList);
         return "operwork";
     }
 
