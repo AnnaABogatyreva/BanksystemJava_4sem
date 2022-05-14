@@ -211,7 +211,7 @@ public class AccountDaoImpl implements AccountDao {
                 session.merge(account);
             }
             closeAccount.setDef(0);
-            queryString = "FROM OperDay o WHERE o.current = 1";
+            queryString = "FROM OperDate o WHERE o.current = 1";
             OperDate operDate = session.createQuery(queryString, OperDate.class).getSingleResult();
             closeAccount.setClosed(operDate.getOperDate());
             session.merge(closeAccount);

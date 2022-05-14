@@ -89,4 +89,15 @@ public class Deposit {
         return capDate;
     }
 
+    public void setCloseDate(Date closeDate) {
+        this.closeDate = closeDate;
+    }
+
+    public void setUpDate(Date upDate) {
+        this.upDate = upDate;
+    }
+
+    public void setCapDate(Date capDate) {
+        this.capDate = capDate;
+    }
 }

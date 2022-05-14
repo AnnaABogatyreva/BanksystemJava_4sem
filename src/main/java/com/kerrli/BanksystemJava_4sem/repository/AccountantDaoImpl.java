@@ -77,11 +77,11 @@ public class AccountantDaoImpl implements AccountantDao {
     }
 
     @org.springframework.data.jpa.repository.Query
-    private void updateDate(Date date) throws Exception {
+    private void updateDate(Date newDate) throws Exception {
         String queryString = "UPDATE OperDate o SET o.current = 0 WHERE o.current = 1";
         Query query = session.createQuery(queryString);
         query.executeUpdate();
-        OperDate operDate = new OperDate(date, 1);
+        OperDate operDate = new OperDate(newDate, 1);
         try {
             session.merge(operDate);
         }
@@ -91,8 +91,17 @@ public class AccountantDaoImpl implements AccountantDao {
     }
 
     @org.springframework.data.jpa.repository.Query
+    private void updateDeposits(Date newDate, String loginEmployee) throws Exception {
+        String queryString = "SELECT d FROM Deposit d WHERE d.closeDate IS NULL";
+        List depositList = session.createQuery(queryString, Deposit.class).getResultList();
+        for (Object deposit : depositList) {
+            new DepositDaoImpl(session).updateDeposit(((Deposit) deposit).getId(), newDate, loginEmployee);
+        }
+    }
+
+    @org.springframework.data.jpa.repository.Query
     @Override
-    public void changeOperDate(Date date) throws Exception {
+    public void changeOperDate(Date date, String loginEmployee) throws Exception {
         boolean transaction = LibTransaction.beginTransaction(session);
         try {
             String queryString = "SELECT o FROM OperDate o WHERE o.current = 1";
@@ -102,7 +111,8 @@ public class AccountantDaoImpl implements AccountantDao {
             }
             updateBalance();
             updateDate(date);
-            // !!! deposits and credits
+            updateDeposits(date, loginEmployee);
+            // credits
             LibTransaction.commitTransaction(session, transaction);
         }
         catch (Exception e) {

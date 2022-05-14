@@ -331,7 +331,7 @@
                 <form action="close_deposit" method="POST">
                     <div class="form-content"><p>Выберите вклад</p>
                         <label><div class="select-block">
-                            <select class="form-control" name="deposit">
+                            <select class="form-control" name="depositId">
                                 <option selected></option>
                                 <option th:each="deposit : ${depositList}" th:value="${deposit.id}"
                                         th:text="${deposit.getUpDescript()}"></option>

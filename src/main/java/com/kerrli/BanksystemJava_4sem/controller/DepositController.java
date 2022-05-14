@@ -35,4 +35,18 @@ public class DepositController {
         }
         return "redirect:/operwork#create_deposit";
     }
+
+    @PostMapping("/close_deposit")
+    public String closeDeposit(@RequestParam int depositId, @RequestParam String accountNum, HttpSession httpSession) {
+        Employee employee = (Employee) httpSession.getAttribute("employee");
+        try {
+            depositService.closeDeposit(depositId, accountNum, employee.getLogin());
+            Lib.setAttribute(httpSession, "report_close_deposit", "Вклад закрыт. ");
+        }
+        catch (Exception e) {
+            Lib.setAttribute(httpSession, "error_close_deposit", "Ошибка закрытия вклада. " +
+                    e.getMessage());
+        }
+        return "redirect:/operwork#close_deposit";
+    }
 }

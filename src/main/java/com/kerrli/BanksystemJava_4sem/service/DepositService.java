@@ -24,11 +24,10 @@ public class DepositService {
     }
 
     public void createDeposit(String type, String debitAccountNum, double sum, String loginEmployee) throws Exception {
-        try {
-            depositDao.createDeposit(type, debitAccountNum, sum, loginEmployee);
-        }
-        catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        depositDao.createDeposit(type, debitAccountNum, sum, loginEmployee);
+    }
+
+    public void closeDeposit(int depositId, String creditAccountNum, String loginEmployee) throws Exception {
+        depositDao.closeDeposit(depositId, creditAccountNum, loginEmployee);
     }
 }

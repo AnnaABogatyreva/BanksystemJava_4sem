@@ -81,6 +81,21 @@ public class Lib {
         return date;
     }
 
+    // количество дней между датами
+    public static int diffDate(Date date1, Date date2) {
+        long cnt1 = date1.getTime();
+        long cnt2 = date2.getTime();
+        return (int) ((cnt2 - cnt1) / 1000 / 60 / 60 / 24);
+    }
+
+    // прибавить нужное количество месяцев к дате
+    public static Date addMonths(Date date, int monthCnt) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, monthCnt);
+        return calendar.getTime();
+    }
+
     public static double roundSum(double sum) {
         return Math.round(sum * 100.0) / 100.0;
     }

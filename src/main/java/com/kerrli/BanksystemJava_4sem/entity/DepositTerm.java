@@ -13,8 +13,9 @@ public class DepositTerm {
     @Id
     @Column(name = "`type`")
     private String type;
+
     @Column(name = "monthcnt")
-    private int monthCnt;
+    private Integer monthCnt;
     @Column(name = "cap")
     private String cap;
     @Column(name = "rate")
@@ -28,7 +29,7 @@ public class DepositTerm {
 
     public DepositTerm(String type, Integer monthCnt, String cap, double rate, String descript, String currency) {
         this.type = type;
-        this.monthCnt = (monthCnt == null) ? 0 : monthCnt;
+        this.monthCnt = monthCnt;
         this.cap = cap;
         this.rate = rate;
         this.descript = descript;

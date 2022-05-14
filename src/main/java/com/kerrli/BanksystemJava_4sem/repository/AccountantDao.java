@@ -14,5 +14,5 @@ public interface AccountantDao {
     void setCourse(String currency, double buy, double cost, double sell) throws Exception;
 
     @Query
-    void changeOperDate(Date date) throws Exception;
+    void changeOperDate(Date date, String loginEmployee) throws Exception;
 }

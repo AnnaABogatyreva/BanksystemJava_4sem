@@ -1,5 +1,6 @@
 package com.kerrli.BanksystemJava_4sem.controller;
 
+import com.kerrli.BanksystemJava_4sem.entity.Employee;
 import com.kerrli.BanksystemJava_4sem.service.AccountantService;
 import com.kerrli.BanksystemJava_4sem.util.Lib;
 import org.springframework.stereotype.Controller;
@@ -22,8 +23,9 @@ public class AccountantController {
     @PostMapping("/change_operdate")
     public String changeOperDate(@RequestParam String dateString, HttpSession httpSession) {
         try {
+            Employee employee = (Employee) httpSession.getAttribute("employee");
             Date date = Lib.parseDate(dateString);
-            accountantService.changeOperDate(date);
+            accountantService.changeOperDate(date, employee.getLogin());
             Lib.setAttribute(httpSession, "report_change_operdate",
                     "Установлена дата " + Lib.formatDate(date, "dd.MM.yyyy"));
         }

@@ -26,7 +26,7 @@ public class AccountantService {
         accountantDao.setCourse(currency, buy, cost, sell);
     }
 
-    public void changeOperDate(Date date) throws Exception {
-        accountantDao.changeOperDate(date);
+    public void changeOperDate(Date date, String loginEmployee) throws Exception {
+        accountantDao.changeOperDate(date, loginEmployee);
     }
 }
