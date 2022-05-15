@@ -31,4 +31,8 @@ public class CreditService {
     public Map<String, Object> getCreditInfo(int id) {
         return creditDao.getCreditInfo(id);
     }
+
+    public void closeCredit(int id, String loginEmployee) throws Exception {
+        creditDao.zeroAndCloseCredit(id, loginEmployee);
+    }
 }

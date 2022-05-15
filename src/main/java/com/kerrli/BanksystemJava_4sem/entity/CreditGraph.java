@@ -69,6 +69,15 @@ public class CreditGraph {
         this.processed = processed;
     }
 
+    public CreditGraph(CreditGraph creditGraph) {
+        this.id = creditGraph.id;
+        this.num = creditGraph.num;
+        this.payDate = creditGraph.payDate;
+        this.mainDutySum = creditGraph.mainDutySum;
+        this.percentSum = creditGraph.percentSum;
+        this.processed = creditGraph.processed;
+    }
+
     public int getId() {
         return id;
     }

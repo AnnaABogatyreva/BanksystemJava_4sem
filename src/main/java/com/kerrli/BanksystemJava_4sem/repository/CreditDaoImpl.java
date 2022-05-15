@@ -47,7 +47,8 @@ public class CreditDaoImpl implements CreditDao {
         query.setParameter("account", credit.getMainDutyAccountNum());
         query.setMaxResults(1);
         Operation operation = (Operation) query.getSingleResult();
-        return creditTerm.getDescript() + ", " + Lib.formatSum(creditTerm.getRate()) + "% годовых, сумма " +
+        return "№" + credit.getId() + ": " + creditTerm.getDescript() + ", " +
+                Lib.formatSum(creditTerm.getRate()) + "% годовых, сумма " +
                 Lib.formatSum(operation.getSum()) + " " + currency.getIsoCode();
     }
 
@@ -219,5 +220,195 @@ public class CreditDaoImpl implements CreditDao {
         map.put("tableTotalPercentStr", Lib.formatSum(sumPercent));
         map.put("tableTotalRowStr", Lib.formatSum(sumRow));
         return map;
+    }
+
+    @org.springframework.data.jpa.repository.Query
+    @Override
+    public void updateCredit(int creditId, Date newDate, String loginEmployee) throws Exception {
+        Credit credit = session.get(Credit.class, creditId);
+        CreditTerm creditTerm = session.get(CreditTerm.class, credit.getType());
+        Account debitBankAccount = new OperationDaoImpl(session).getBankAccount(
+                credit.getMainDutyAccountNum(), "70606%0001");
+        Map map = getCreditInfo(creditId);
+        List graphList = (List) map.get("table");
+        List graphExtList = new ArrayList<CreditGraphExt>();
+        for (int i = 0; i < graphList.size(); i++) {
+            Date prevPayDate = (i == 0) ? credit.getOpenDate() : ((CreditGraph) graphList.get(i - 1)).getPayDate();
+            CreditGraphExt creditGraphExt = new CreditGraphExt((CreditGraph) graphList.get(i), prevPayDate);
+            if (creditGraphExt.getProcessed() == 0 && creditGraphExt.getPayDate().before(newDate))
+                graphExtList.add(creditGraphExt);
+        }
+        if (graphExtList.size() == 0)
+            return;
+        boolean transaction = LibTransaction.beginTransaction(session);
+        try {
+            for (Object o : graphExtList) {
+                CreditGraphExt graph = (CreditGraphExt) o;
+                // начисление процентов по осн. долгу (по графику)
+                if (graph.getPercentSum() > 0) {
+                    new OperationDaoImpl(session).transaction(debitBankAccount.getAccountNum(),
+                            credit.getPercentAccountNum(), graph.getPercentSum(), loginEmployee);
+                }
+                // начисление процентов на проср. долг (по сумме)
+                double overDutySum = new AccountDaoImpl(session).checkBalance(credit.getOverDutyAccountNum());
+                if (overDutySum > 0) {
+                    double overDutySumPercent = Lib.roundSum(overDutySum * creditTerm.getOverdueRate() / 100 / 365 *
+                            Lib.diffDate(graph.getPrevPayDate(), graph.getPayDate()));
+                    new OperationDaoImpl(session).transaction(debitBankAccount.getAccountNum(),
+                            credit.getOverPercentAccountNum(), overDutySumPercent, loginEmployee);
+                }
+                // порядок гашения: 1) проср. проценты, 2) проср. долг, 3) осн. проценты, 4) осн. долг
+                double currentSum = new AccountDaoImpl(session).checkBalance(credit.getCurrentAccountNum());
+                // 1) проср. проценты
+                double overPercentSum = new AccountDaoImpl(session).checkBalance(credit.getOverPercentAccountNum());
+                if (currentSum > 0 && overPercentSum > 0) {
+                    double sum = Math.min(currentSum, overPercentSum);
+                    new OperationDaoImpl(session).transaction(credit.getOverPercentAccountNum(),
+                            credit.getCurrentAccountNum(), sum, loginEmployee);
+                    currentSum -= sum;
+                }
+                // 2) проср. долг
+                overDutySum = new AccountDaoImpl(session).checkBalance(credit.getOverDutyAccountNum());
+                if (currentSum > 0 && overDutySum > 0) {
+                    double sum = Math.min(currentSum, overDutySum);
+                    new OperationDaoImpl(session).transaction(credit.getOverDutyAccountNum(),
+                            credit.getCurrentAccountNum(), sum, loginEmployee);
+                    currentSum -= sum;
+                }
+                // 3) осн. проценты
+                double percentSum = new AccountDaoImpl(session).checkBalance(credit.getPercentAccountNum());
+                if (percentSum > 0) {
+                    double sum = Math.min(currentSum, percentSum);
+                    if (sum > 0) {
+                        new OperationDaoImpl(session).transaction(credit.getPercentAccountNum(),
+                                credit.getCurrentAccountNum(), sum, loginEmployee);
+                        percentSum -= sum;
+                        currentSum -= sum;
+                    }
+                    // остались непогашенные проценты - переносим в просроченные
+                    if (percentSum > 0) {
+                        new OperationDaoImpl(session).transaction(credit.getPercentAccountNum(),
+                                credit.getOverPercentAccountNum(), percentSum, loginEmployee);
+                    }
+                }
+                // 4) основной долг (не весь, сумма из графика погашений)
+                double dutySum = new AccountDaoImpl(session).checkBalance(credit.getMainDutyAccountNum());
+                if (dutySum > 0) {
+                    double sum = Math.min(currentSum, graph.getMainDutySum());
+                    if (sum > 0) {
+                        new OperationDaoImpl(session).transaction(credit.getMainDutyAccountNum(),
+                                credit.getCurrentAccountNum(), sum, loginEmployee);
+                    }
+                    // перенос в просрочку
+                    if (sum < graph.getMainDutySum()) {
+                        double sum2 = Lib.roundSum(graph.getMainDutySum() - sum);
+                        new OperationDaoImpl(session).transaction(credit.getMainDutyAccountNum(),
+                                credit.getOverDutyAccountNum(), sum2, loginEmployee);
+                    }
+                }
+                // поставим флаг в графике, что строка обработана, обновим дату посл. обновления в поле `update`
+                CreditGraph creditGraph = new CreditGraph(graph);
+                creditGraph.setProcessed(1);
+                session.merge(creditGraph);
+                credit.setUpDate(graph.getPayDate());
+                session.merge(credit);
+            } // for
+            // если задолженность полностью погашена - автоматически закроем кредит
+            map = getCreditInfo(creditId);
+            if (Lib.roundSum((Double) map.get("total")) == 0) {
+                closeCredit(creditId);
+            }
+            LibTransaction.commitTransaction(session, transaction);
+        }
+        catch (Exception e) {
+            LibTransaction.rollbackTransaction(session, transaction);
+            throw e;
+        }
+    }
+
+    @org.springframework.data.jpa.repository.Query
+    @Override
+    public void zeroAndCloseCredit(int creditId, String loginEmployee) throws Exception {
+        // погашение задолженностей средствами с текущего счета
+        Credit credit = session.get(Credit.class, creditId);
+        if (credit.getCloseDate() != null)
+            throw new Exception("Кредит №" + creditId + " закрыт " +
+                    Lib.formatDate(credit.getCloseDate(), "dd.MM.yyyy"));
+        Map map = getCreditInfo(creditId);
+        double currentSum = new AccountDaoImpl(session).checkBalance(credit.getCurrentAccountNum());
+        if (currentSum < (Double) map.get("total")) {
+            throw new Exception("Недостаточно средств на тек. счете для полного погашения кредита №" +
+                    creditId + ": " + Lib.formatSum((Double) map.get("total") - currentSum) + ". ");
+        }
+        Account debitBankAccount = new OperationDaoImpl(session).getBankAccount(
+                credit.getMainDutyAccountNum(), "70606%0001");
+        boolean transaction = LibTransaction.beginTransaction(session);
+        try {
+            // доначисление процентов и гашение остатков задолженности
+            // гашение осн. долга
+            if ((Double) map.get("mainDuty") > 0) {
+                new OperationDaoImpl(session).transaction(credit.getMainDutyAccountNum(),
+                        credit.getCurrentAccountNum(), (Double) map.get("mainDuty"), loginEmployee);
+            }
+            // доначисление процентов с даты посл. обновления
+            if ((Double) map.get("percent2") > 0) {
+                new OperationDaoImpl(session).transaction(debitBankAccount.getAccountNum(),
+                        credit.getPercentAccountNum(), (Double) map.get("percent2"), loginEmployee);
+            }
+            // гашение процентов
+            if ((Double) map.get("percent") + (Double) map.get("percent2") > 0) {
+                new OperationDaoImpl(session).transaction(credit.getPercentAccountNum(),
+                        credit.getCurrentAccountNum(),
+                        Lib.roundSum((Double) map.get("percent") + (Double) map.get("percent2")), loginEmployee);
+            }
+            // гашение проср. долга
+            if ((Double) map.get("overDuty") > 0) {
+                new OperationDaoImpl(session).transaction(credit.getOverDutyAccountNum(),
+                        credit.getCurrentAccountNum(), (Double) map.get("overDuty"), loginEmployee);
+            }
+            // доначисление проср. процентов с даты посл. обновления
+            if ((Double) map.get("overPercent2") > 0) {
+                new OperationDaoImpl(session).transaction(debitBankAccount.getAccountNum(),
+                        credit.getOverPercentAccountNum(), (Double) map.get("overPercent2"), loginEmployee);
+            }
+            // гашение проср. процентов
+            if ((Double) map.get("overPercent") + (Double) map.get("overPercent2") > 0) {
+                new OperationDaoImpl(session).transaction(credit.getOverPercentAccountNum(),
+                        credit.getCurrentAccountNum(),
+                        Lib.roundSum((Double) map.get("overPercent") + (Double) map.get("overPercent2")), loginEmployee);
+            }
+            // непосредственно закрытие кредита
+            closeCredit(creditId);
+            LibTransaction.commitTransaction(session, transaction);
+        }
+        catch (Exception e) {
+            LibTransaction.rollbackTransaction(session, transaction);
+            throw e;
+        }
+    }
+
+    @org.springframework.data.jpa.repository.Query
+    private void closeCredit(int creditId) throws Exception {
+        // закрытие кредита (всех счетов и договора, договор должен быть погашен)
+        // проверка отсутствия задолженности
+        Map map = getCreditInfo(creditId);
+        if ((Double) map.get("total") > 0) {
+            throw new Exception("По кредиту имеется задолженность в размере " +
+                    Lib.formatSum((Double) map.get("total")) + ". ");
+        }
+        Credit credit = session.get(Credit.class, creditId);
+        // закроем счета
+        new AccountDaoImpl(session).closeAccount(credit.getMainDutyAccountNum());
+        new AccountDaoImpl(session).closeAccount(credit.getPercentAccountNum());
+        new AccountDaoImpl(session).closeAccount(credit.getOverDutyAccountNum());
+        new AccountDaoImpl(session).closeAccount(credit.getOverPercentAccountNum());
+        if (new AccountDaoImpl(session).checkBalance(credit.getCurrentAccountNum()) < 0.005) {
+            new AccountDaoImpl(session).closeAccount(credit.getCurrentAccountNum());
+        }
+        // закроем сам договор
+        String queryString = "SELECT o FROM OperDate o WHERE o.current = 1";
+        OperDate tempDate = session.createQuery(queryString, OperDate.class).getSingleResult();
+        credit.setCloseDate(tempDate.getOperDate());
+        session.merge(credit);
     }
 }

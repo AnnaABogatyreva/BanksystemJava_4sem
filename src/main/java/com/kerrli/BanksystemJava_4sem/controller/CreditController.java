@@ -4,6 +4,7 @@ import com.kerrli.BanksystemJava_4sem.entity.Client;
 import com.kerrli.BanksystemJava_4sem.entity.Employee;
 import com.kerrli.BanksystemJava_4sem.service.CreditService;
 import com.kerrli.BanksystemJava_4sem.util.Lib;
+import com.kerrli.BanksystemJava_4sem.util.LibTransaction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,6 +64,25 @@ public class CreditController {
         Map<String, Object> map = creditService.getCreditInfo(creditId);
         httpSession.setAttribute("credit", map);
         return "redirect:/graphcredit";
+    }
+
+    @PostMapping("/back_graph_credit")
+    public String backGraphCredit() {
+        return "redirect:/operwork#show_graph_credit";
+    }
+
+    @PostMapping("/close_credit")
+    public String closeCredit(@RequestParam int creditId, HttpSession httpSession) {
+        Employee employee = (Employee) httpSession.getAttribute("employee");
+        try {
+            creditService.closeCredit(creditId, employee.getLogin());
+            Lib.setAttribute(httpSession, "report_close_credit", "Кредит закрыт.");
+        }
+        catch (Exception e) {
+            Lib.setAttribute(httpSession, "error_close_credit", "Ошибка закрытия кредита. " +
+                    e.getMessage());
+        }
+        return "redirect:/operwork#close_credit";
     }
 }
 

@@ -100,6 +100,15 @@ public class AccountantDaoImpl implements AccountantDao {
     }
 
     @org.springframework.data.jpa.repository.Query
+    private void updateCredits(Date newDate, String loginEmployee) throws Exception {
+        String queryString = "SELECT c FROM Credit c WHERE c.closeDate IS NULL";
+        List creditList = session.createQuery(queryString, Credit.class).getResultList();
+        for (Object credit : creditList) {
+            new CreditDaoImpl(session).updateCredit(((Credit) credit).getId(), newDate, loginEmployee);
+        }
+    }
+
+    @org.springframework.data.jpa.repository.Query
     @Override
     public void changeOperDate(Date date, String loginEmployee) throws Exception {
         boolean transaction = LibTransaction.beginTransaction(session);
@@ -112,7 +121,7 @@ public class AccountantDaoImpl implements AccountantDao {
             updateBalance();
             updateDate(date);
             updateDeposits(date, loginEmployee);
-            // credits
+            updateCredits(date, loginEmployee);
             LibTransaction.commitTransaction(session, transaction);
         }
         catch (Exception e) {

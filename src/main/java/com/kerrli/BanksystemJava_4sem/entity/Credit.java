@@ -106,4 +106,12 @@ public class Credit {
     public Date getUpDate() {
         return upDate;
     }
+
+    public void setUpDate(Date upDate) {
+        this.upDate = upDate;
+    }
+
+    public void setCloseDate(Date closeDate) {
+        this.closeDate = closeDate;
+    }
 }
