@@ -32,4 +32,16 @@ public class Operation {
         this.sum = sum;
         this.loginEmployee = loginEmployee;
     }
+
+    public String getDebitAccountNum() {
+        return debitAccountNum;
+    }
+
+    public String getCreditAccountNum() {
+        return creditAccountNum;
+    }
+
+    public double getSum() {
+        return sum;
+    }
 }

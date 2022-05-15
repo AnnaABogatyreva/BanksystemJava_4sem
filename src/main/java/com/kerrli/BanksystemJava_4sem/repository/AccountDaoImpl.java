@@ -189,13 +189,21 @@ public class AccountDaoImpl implements AccountDao {
     @org.springframework.data.jpa.repository.Query
     @Override
     public Account closeAccount(String accountNum) throws Exception {
+        String queryString = "SELECT COUNT(c) FROM Credit c " +
+                "WHERE c.currentAccountNum = :accountNum AND closedate IS NULL";
+        Query query = session.createQuery(queryString, Long.class);
+        query.setParameter("accountNum", accountNum);
+        Long cnt = (Long) query.getSingleResult();
+        if (cnt > 0) {
+            throw new Exception("Счет привязан к действующему кредиту. ");
+        }
         boolean transaction = LibTransaction.beginTransaction(session);
         double balance = checkBalance(accountNum);
         if (Math.abs(balance) < 0.005) {
             Account closeAccount = session.get(Account.class, accountNum);
-            String queryString = "SELECT COUNT(a) FROM Account a " +
+            queryString = "SELECT COUNT(a) FROM Account a " +
                     "WHERE a.idClient = :idClient AND a.closed IS NULL AND a.currency = :currency";
-            Query query = session.createQuery(queryString, Long.class);
+            query = session.createQuery(queryString, Long.class);
             query.setParameter("idClient", closeAccount.getIdClient());
             query.setParameter("currency", closeAccount.getCurrency());
             Long cntAccount = (Long) query.getSingleResult();

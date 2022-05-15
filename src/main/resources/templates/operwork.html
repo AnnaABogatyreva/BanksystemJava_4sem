@@ -329,26 +329,34 @@
                 <a class="anchor" id="close_deposit"></a>
                 <div class="form-name"><p>Закрытие вклада</p></div>
                 <form action="close_deposit" method="POST">
-                    <div class="form-content"><p>Выберите вклад</p>
-                        <label><div class="select-block">
-                            <select class="form-control" name="depositId">
-                                <option selected></option>
-                                <option th:each="deposit : ${depositList}" th:value="${deposit.id}"
-                                        th:text="${deposit.getUpDescript()}"></option>
-                            </select>
-                        </div></label>
+                    <div th:unless="${accountList.isEmpty() or depositList.isEmpty()}">
+                        <div class="form-content"><p>Выберите вклад</p>
+                            <label><div class="select-block">
+                                <select class="form-control" name="depositId">
+                                    <option selected></option>
+                                    <option th:each="deposit : ${depositList}" th:value="${deposit.id}"
+                                            th:text="${deposit.getUpDescript()}"></option>
+                                </select>
+                            </div></label>
+                        </div>
+                        <div class="form-content"><p>Средства будут перечислены на счет</p>
+                            <label><div class="select-block">
+                                <select class="form-control" name="accountNum">
+                                    <option selected></option>
+                                    <option th:each="account : ${accountList}" th:value="${account.accountNum}"
+                                            th:text="${account.getUpDescript()}"></option>
+                                </select>
+                            </div></label>
+                        </div>
+                        <div>
+                            <input class="button" type="submit" value="Закрыть" title="Закрыть выбранный вклад">
+                        </div>
                     </div>
-                    <div class="form-content"><p>Средства будут перечислены на счет</p>
-                        <label><div class="select-block">
-                            <select class="form-control" name="accountNum">
-                                <option selected></option>
-                                <option th:each="account : ${accountList}" th:value="${account.accountNum}"
-                                        th:text="${account.getUpDescript()}"></option>
-                            </select>
-                        </div></label>
+                    <div th:if="${accountList.isEmpty()}">
+                        <label class="information">Нет открытых счетов</label>
                     </div>
-                    <div>
-                        <input class="button" type="submit" value="Закрыть" title="Закрыть выбранный вклад">
+                    <div th:if="${depositList.isEmpty() and !accountList.isEmpty()}">
+                        <label class="information">Нет открытых вкладов</label>
                     </div>
                     <label class="report"><span th:text="${report_close_deposit}"></span></label>
                     <label class="error"><span th:text="${error_close_deposit}"></span></label>
@@ -361,62 +369,79 @@
             <div class="form">
                 <a class="anchor" id="create_credit"></a>
                 <div class="form-name"><p>Выдача кредита</p></div>
-                <form action="vendor/create_credit.php" method="POST">
+                <form action="/create_credit" method="POST">
                     <div class="form-content"><p>Вид кредита</p>
-                        <label><div class="select-block"><select name="type" required>
-                            <option selected></option>
-                            <?php echo out_credit_terms_box(); ?>
-                        </select></div></label>
+                        <label><div class="select-block">
+                            <select class="form-control" name="creditType">
+                                <option selected></option>
+                                <option th:each="type : ${creditTermList}" th:value="${type.type}"
+                                        th:text="${type.toString()}"></option>
+                            </select>
+                        </div></label>
                     </div>
                     <div>
-                        <label>Сумма кредита<input pattern="^\d+(\.\d{1,2}|)$" name="sum" required placeholder="100.00"></label>
+                        <label>Сумма кредита
+                            <input pattern="^\d+(\.\d{1,2}|)$" name="sum" required placeholder="100.00">
+                        </label>
                     </div>
                     <div>
-                        <input class="button" type="submit" value="Выдача" title="Выдача кредита по выбранным условиям">
+                        <input class="button" type="submit" value="Выдача"
+                               title="Выдача кредита по выбранным условиям">
                     </div>
-                    <label class="report"><?php echo session_message("message-create_credit"); ?></label>
+                    <label class="report"><span th:text="${report_create_credit}"></span></label>
+                    <label class="error"><span th:text="${error_create_credit}"></span></label>
                 </form>
             </div>
 
             <div class="form">
                 <a class="anchor" id="graph_credit"></a>
                 <div class="form-name"><p>Просмотр состояния и графика погашения по кредиту</p></div>
-                <form action="graph_credit.php" method="POST">
-                    <?php if (client_credit_count($_SESSION["client"]["id"]) > 0) {  /* есть действующие кредиты */ ?>
-                    <div class="form-content"><p>Вид кредита</p>
-                        <label><div class="select-block"><select name="idcred" required>
-                            <option selected></option>
-                            <?php echo out_client_credit_box($_SESSION["client"]["id"]); ?>
-                        </select></div></label>
+                <form action="/graph_credit" method="POST">
+                    <div th:unless="${creditList.isEmpty()}">
+                        <div class="form-content"><p>Выберите кредит</p>
+                            <label><div class="select-block">
+                                <select class="form-control" name="creditId">
+                                    <option selected></option>
+                                    <option th:each="credit : ${creditList}" th:value="${credit.id}"
+                                            th:text="${credit.getUpDescript()}"></option>
+                                </select>
+                            </div></label>
+                        </div>
+                        <div>
+                            <input class="button" type="submit" value="Состояние" title="Просмотр состояния кредита">
+                        </div>
                     </div>
-                    <div>
-                        <input class="button" type="submit" value="Состояние" title="Просмотр состояния кредита">
+                    <div th:if="${creditList.isEmpty()}">
+                        <label class="information">Нет открытых кредитов</label>
                     </div>
-                    <label class="report"><?php echo session_message("message-graph_credit"); ?></label>
-                    <?php } else { /* нет действующих кредитов */?>
-                    <label class="information">Нет действующих кредитов</label>
-                    <?php } ?>
+                    <label class="report"><span th:text="${report_graph_credit}"></span></label>
+                    <label class="error"><span th:text="${error_graph_credit}"></span></label>
                 </form>
             </div>
 
             <div class="form">
                 <a class="anchor" id="close_credit"></a>
                 <div class="form-name"><p>Закрытие кредита</p></div>
-                <form action="vendor/close_credit.php" method="POST">
-                    <?php if (client_credit_count($_SESSION["client"]["id"]) > 0) {  /* есть действующие кредиты */ ?>
-                    <div class="form-content"><p>Вид кредита</p>
-                        <label><div class="select-block"><select name="idcred" required>
-                            <option selected></option>
-                            <?php echo out_client_credit_box($_SESSION["client"]["id"]); ?>
-                        </select></div></label>
+                <form action="/close_credit" method="POST">
+                    <div th:unless="${creditList.isEmpty()}">
+                        <div class="form-content"><p>Вид кредита</p>
+                            <label><div class="select-block">
+                                <select class="form-control" name="creditId">
+                                    <option selected></option>
+                                    <option th:each="credit : ${creditList}" th:value="${credit.id}"
+                                            th:text="${credit.getUpDescript()}"></option>
+                                </select>
+                            </div></label>
+                        </div>
+                        <div>
+                            <input class="button" type="submit" value="Закрыть" title="Закрытие кредита">
+                        </div>
                     </div>
-                    <div>
-                        <input class="button" type="submit" value="Закрыть" title="Закрытие кредита">
+                    <div th:if="${creditList.isEmpty()}">
+                        <label class="information">Нет открытых кредитов</label>
                     </div>
-                    <label class="report"><?php echo session_message("message-close_credit"); ?></label>
-                    <?php } else { /* нет действующих кредитов */?>
-                    <label class="information">Нет действующих кредитов</label>
-                    <?php } ?>
+                    <label class="report"><span th:text="${report_close_credit}"></span></label>
+                    <label class="error"><span th:text="${error_close_credit}"></span></label>
                 </form>
             </div>
         </div>

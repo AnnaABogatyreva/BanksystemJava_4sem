@@ -3,12 +3,10 @@ package com.kerrli.BanksystemJava_4sem.controller;
 import com.kerrli.BanksystemJava_4sem.entity.Client;
 import com.kerrli.BanksystemJava_4sem.entity.Employee;
 import com.kerrli.BanksystemJava_4sem.repository.AccountDaoImpl;
+import com.kerrli.BanksystemJava_4sem.repository.CreditDaoImpl;
 import com.kerrli.BanksystemJava_4sem.repository.CurrencyDaoImpl;
 import com.kerrli.BanksystemJava_4sem.repository.DepositDaoImpl;
-import com.kerrli.BanksystemJava_4sem.service.AccountService;
-import com.kerrli.BanksystemJava_4sem.service.ClientService;
-import com.kerrli.BanksystemJava_4sem.service.CurrencyService;
-import com.kerrli.BanksystemJava_4sem.service.DepositService;
+import com.kerrli.BanksystemJava_4sem.service.*;
 import com.kerrli.BanksystemJava_4sem.util.Lib;
 import org.hibernate.Session;
 import org.springframework.stereotype.Controller;
@@ -56,6 +54,10 @@ public class ClientController {
         model.addAttribute("depositTermList", depositTermList);
         List depositList = new DepositService(new DepositDaoImpl(tempSession)).getDepositList(client.getId());
         model.addAttribute("depositList", depositList);
+        List creditTermList = new CreditService(new CreditDaoImpl(tempSession)).getCreditTermList();
+        model.addAttribute("creditTermList", creditTermList);
+        List creditList = new CreditService(new CreditDaoImpl(tempSession)).getCreditList(client.getId());
+        model.addAttribute("creditList", creditList);
         return "operwork";
     }
 
