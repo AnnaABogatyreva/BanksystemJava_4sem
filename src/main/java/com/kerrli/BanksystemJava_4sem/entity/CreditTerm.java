@@ -18,17 +18,17 @@ public class CreditTerm {
     @Column(name = "rate")
     private double rate;
     @Column(name = "ovdrate")
-    private double ovdRate;
+    private double overdueRate;
     @Column(name = "descript")
     private String descript;
 
     public CreditTerm() {}
 
-    public CreditTerm(String type, Integer monthCnt, double rate, double ovdRate, String descript) {
+    public CreditTerm(String type, Integer monthCnt, double rate, double overdueRate, String descript) {
         this.type = type;
         this.monthCnt = monthCnt;
         this.rate = rate;
-        this.ovdRate = ovdRate;
+        this.overdueRate = overdueRate;
         this.descript = descript;
     }
 
@@ -44,8 +44,8 @@ public class CreditTerm {
         return rate;
     }
 
-    public double getOvdRate() {
-        return ovdRate;
+    public double getOverdueRate() {
+        return overdueRate;
     }
 
     public String getDescript() {

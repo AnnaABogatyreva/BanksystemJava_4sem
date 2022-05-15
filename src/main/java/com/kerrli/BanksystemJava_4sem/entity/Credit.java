@@ -1,15 +1,13 @@
 package com.kerrli.BanksystemJava_4sem.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "credits")
 public class Credit {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
     @Column(name = "idclient")
@@ -25,19 +23,19 @@ public class Credit {
     @Column(name = "odacc")
     private String mainDutyAccountNum;
     @Column(name = "pcacc")
-    private String procentAccountNum;
+    private String percentAccountNum;
     @Column(name = "prodacc")
     private String overDutyAccountNum;
     @Column(name = "prpcacc")
-    private String overProcentAccountNum;
-    @Column(name = "update")
+    private String overPercentAccountNum;
+    @Column(name = "`update`")
     private Date upDate;
 
     public Credit() {}
 
     public Credit(int idClient, String type, Date openDate, Date closeDate, String currentAccountNum,
-                  String mainDutyAccountNum, String procentAccountNum, String overDutyAccountNum,
-                  String overProcentAccountNum, Date upDate) {
+                  String mainDutyAccountNum, String percentAccountNum, String overDutyAccountNum,
+                  String overPercentAccountNum, Date upDate) {
         this.id = 0;
         this.idClient = idClient;
         this.type = type;
@@ -45,9 +43,9 @@ public class Credit {
         this.closeDate = closeDate;
         this.currentAccountNum = currentAccountNum;
         this.mainDutyAccountNum = mainDutyAccountNum;
-        this.procentAccountNum = procentAccountNum;
+        this.percentAccountNum = percentAccountNum;
         this.overDutyAccountNum = overDutyAccountNum;
-        this.overProcentAccountNum = overProcentAccountNum;
+        this.overPercentAccountNum = overPercentAccountNum;
         this.upDate = upDate;
     }
 
@@ -59,9 +57,9 @@ public class Credit {
         this.closeDate = credit.closeDate;
         this.currentAccountNum = credit.currentAccountNum;
         this.mainDutyAccountNum = credit.mainDutyAccountNum;
-        this.procentAccountNum = credit.procentAccountNum;
+        this.percentAccountNum = credit.percentAccountNum;
         this.overDutyAccountNum = credit.overDutyAccountNum;
-        this.overProcentAccountNum = credit.overProcentAccountNum;
+        this.overPercentAccountNum = credit.overPercentAccountNum;
         this.upDate = credit.upDate;
     }
 
@@ -93,16 +91,16 @@ public class Credit {
         return mainDutyAccountNum;
     }
 
-    public String getProcentAccountNum() {
-        return procentAccountNum;
+    public String getPercentAccountNum() {
+        return percentAccountNum;
     }
 
     public String getOverDutyAccountNum() {
         return overDutyAccountNum;
     }
 
-    public String getOverProcentAccountNum() {
-        return overProcentAccountNum;
+    public String getOverPercentAccountNum() {
+        return overPercentAccountNum;
     }
 
     public Date getUpDate() {

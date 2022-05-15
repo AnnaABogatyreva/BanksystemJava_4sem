@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface CreditDao {
@@ -15,4 +16,8 @@ public interface CreditDao {
 
     @Query
     List getCreditList(int idClient);
+
+    void createCredit(String type, double sum, int idClient, String loginEmployee) throws Exception;
+
+    Map<String, Object> getCreditInfo(int id);
 }

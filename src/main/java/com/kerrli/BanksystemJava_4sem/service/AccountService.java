@@ -20,7 +20,7 @@ public class AccountService {
         return accountDao;
     }
 
-    public Account createAccount(int idClient, String currencyCode, String acc2p, String descript) {
+    public Account createAccount(int idClient, String currencyCode, String acc2p, String descript) throws Exception {
         return accountDao.createAccount(idClient, currencyCode, acc2p, descript);
     }
 

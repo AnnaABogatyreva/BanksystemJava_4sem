@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/main-container.css">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Оператор</title>
+</head>
+<body>
+<header class="header">
+    <div class="header-container">
+        <div class="header-menu">
+            <div class="subbutton" onclick="document.location.href='/oper'">Оператор</div>
+            <div class="subbutton" onclick="document.location.href='/acc'">Бухгалтер</div>
+        </div>
+        <div class="role-name-container">
+            <div class="client-info">
+                <span>
+                    Сотрудник: <span th:text="${employee.name}"></span>, <span th:text="${emprole}"></span>
+                </span>
+            </div>
+            <div class="role-name">
+				<span>
+                    Работа с клиентом: <span th:text="${client.name}"></span>,
+                    паспорт № <span th:text="${client.passport}"></span>
+                </span>
+            </div>
+        </div>
+        <div class="exit-button subbutton">
+            <div onclick="document.location.href='/index'">Выход</div>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="main-container">
+        <div class="air"></div>
+        <div class="column">
+            <form action="/operwork#show_graph_credit" method="GET">
+                <div th:if="${credit.isEmpty()}">
+                    <p class='infcp'>Информация по кредиту №$id не найдена!</p>
+                </div>
+                <div th:unless="${credit.isEmpty()}">
+                    <div class="info-container">
+                        <div class="form-name">
+                            <p>Просмотр текущего состояния кредита</p>
+                        </div>
+                    </div>
+                    <p class='infcph'>Информация по кредиту №
+                        <span th:text="${credit.get('id')}"></span> от
+                        <span th:text="${credit.get('openDate')}"></span> по состоянию на
+                        <span th:text="${credit.get('currentDate')}"></span>
+                    </p>
+                    <p class='infcp'>
+                        Наименование продукта:&nbsp;
+                            <span th:text="${credit.get('descript')}"></span><br>
+                        Сумма кредита:&nbsp;
+                            <span th:text="${credit.get('creditSum')}"></span>&nbsp;
+                            <span th:text="${credit.get('currency')}"></span><br>
+                        Процентная ставка:&nbsp;
+                            <span th:text="${credit.get('rate')}"></span> % годовых <br>
+                        Штрафная ставка:&nbsp;
+                            <span th:text="${credit.get('overRate')}"></span> % годовых <br>
+                        Дата последнего пересчета:&nbsp;
+                            <span th:text="${credit.get('upDate')}"></span><br>
+                        Текущая сумма основного долга:&nbsp;
+                            <span th:text="${credit.get('mainDutyStr')}"></span>&nbsp;
+                            <span th:text="${credit.get('currency')}"></span><br>
+                        Текущая сумма начисленных процентов:&nbsp;
+                            <span th:text="${credit.get('percentStr')}"></span> +&nbsp;
+                            <span th:text="${credit.get('percent2Str')}"></span>&nbsp;
+                            <span th:text="${credit.get('currency')}"></span><br>
+                        Текущая сумма просроченного долга:&nbsp;
+                            <span th:text="${credit.get('overDutyStr')}"></span>&nbsp;
+                            <span th:text="${credit.get('currency')}"></span><br>
+                        Текущая сумма просроченных процентов:&nbsp;
+                            <span th:text="${credit.get('overPercentStr')}"></span> +&nbsp;
+                            <span th:text="${credit.get('overPercent2Str')}"></span>&nbsp;
+                            <span th:text="${credit.get('currency')}"></span><br>
+                        Задолженность итоговая:&nbsp;
+                            <span th:text="${credit.get('totalStr')}"></span>&nbsp;
+                            <span th:text="${credit.get('currency')}"></span><br>
+                        Остаток на текущем счете:&nbsp;
+                            <span th:text="${credit.get('currentStr')}"></span>&nbsp;
+                            <span th:text="${credit.get('currency')}"></span><br>
+                        <span th:if="${credit.get('current') < credit.get('total')}">
+                            Для немедленного погашения необходимо внести на текущий счет:&nbsp;
+                                <span th:text="${credit.get('lackStr')}"></span>&nbsp;
+                                <span th:text="${credit.get('currency')}"></span><br>
+                        </span>
+                        <span th:unless="${credit.get('current') < credit.get('total')}">
+                            Средств на текущем счете достаточно для немедленного погашения<br>
+                        </span>
+                    </p>
+                    <table>
+                        <div class="form-name"><p>График погашений</p></div>
+                        <tr>
+                            <th>Дата платежа</th>
+                            <th>Сумма осн. долга</th>
+                            <th>Сумма процентов</th>
+                            <th>Всего</th>
+                            <th>Обработано</th>
+                        </tr>
+                        <tr th:each="row: ${credit.get('table')}">
+                            <td th:text="${row.getPayDateStr()}"></td>
+                            <td th:text="${row.getMainDutySumStr()}"></td>
+                            <td th:text="${row.getPercentSumStr()}"></td>
+                            <td th:text="${row.getTotalSumStr()}"></td>
+                            <td th:if="${row.processed}">&check;</td>
+                            <td th:unless="${row.processed}"></td>
+                        </tr>
+                        <tr>
+                            <td>Итого:</td>
+                            <td th:text="${credit.get('tableTotalMainDutyStr')}"></td>
+                            <td th:text="${credit.get('tableTotalPercentStr')}"></td>
+                            <td th:text="${credit.get('tableTotalRowStr')}"></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+                <input class="button" type="submit" value="Назад" title="Вернуться к работе с клиентом">
+            </form>
+        </div>
+        <div class="air"></div>
+    </div>
+</main>
+
+</body>
+</html>

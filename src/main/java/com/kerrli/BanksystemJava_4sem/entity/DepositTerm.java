@@ -13,7 +13,6 @@ public class DepositTerm {
     @Id
     @Column(name = "`type`")
     private String type;
-
     @Column(name = "monthcnt")
     private Integer monthCnt;
     @Column(name = "cap")

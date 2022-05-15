@@ -394,9 +394,9 @@
             </div>
 
             <div class="form">
-                <a class="anchor" id="graph_credit"></a>
+                <a class="anchor" id="show_graph_credit"></a>
                 <div class="form-name"><p>Просмотр состояния и графика погашения по кредиту</p></div>
-                <form action="/graph_credit" method="POST">
+                <form action="/show_graph_credit" method="POST">
                     <div th:unless="${creditList.isEmpty()}">
                         <div class="form-content"><p>Выберите кредит</p>
                             <label><div class="select-block">
@@ -414,8 +414,8 @@
                     <div th:if="${creditList.isEmpty()}">
                         <label class="information">Нет открытых кредитов</label>
                     </div>
-                    <label class="report"><span th:text="${report_graph_credit}"></span></label>
-                    <label class="error"><span th:text="${error_graph_credit}"></span></label>
+                    <label class="report"><span th:text="${report_show_graph_credit}"></span></label>
+                    <label class="error"><span th:text="${error_show_graph_credit}"></span></label>
                 </form>
             </div>
 

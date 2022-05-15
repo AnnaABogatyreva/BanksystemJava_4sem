@@ -61,7 +61,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @org.springframework.data.jpa.repository.Query
     @Override
-    public Account createAccount(int idClient, String currencyCode, String acc2p, String descript) {
+    public Account createAccount(int idClient, String currencyCode, String acc2p, String descript) throws Exception {
         boolean transaction = LibTransaction.beginTransaction(session);
         String accountNum = generateAccountNum(acc2p, currencyCode);
         String queryString = "SELECT COUNT(a) FROM Account a " +
@@ -72,8 +72,14 @@ public class AccountDaoImpl implements AccountDao {
         Long cnt = (Long) query.list().get(0);
         int def = (cnt > 0) ? 0 : 1;
         Account account = new Account(idClient, accountNum, currencyCode, descript, null, def);
-        session.merge(account);
-        LibTransaction.commitTransaction(session, transaction);
+        try {
+            session.merge(account);
+            LibTransaction.commitTransaction(session, transaction);
+        }
+        catch (Exception e) {
+            LibTransaction.rollbackTransaction(session, transaction);
+            throw e;
+        }
         return account;
     }
 

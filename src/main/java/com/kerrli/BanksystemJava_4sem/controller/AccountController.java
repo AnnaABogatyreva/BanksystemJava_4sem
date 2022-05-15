@@ -21,8 +21,14 @@ public class AccountController {
     @PostMapping("/create_account")
     public String createAccount(@RequestParam String currencyCode, HttpSession httpSession) {
         int idClient = ((Client) httpSession.getAttribute("client")).getId();
-        Account account = accountService.createAccount(idClient, currencyCode, "40817", "Счет физ. лица");
-        Lib.setAttribute(httpSession, "report_create_account", "Счет успешно создан. ");
+        try {
+            Account account = accountService.createAccount(idClient, currencyCode,
+                    "40817", "Счет физ. лица");
+            Lib.setAttribute(httpSession, "report_create_account", "Счет успешно создан. ");
+        }
+        catch (Exception e) {
+            Lib.setAttribute(httpSession, "error_create_account", "Счет не создан. " + e.getMessage());
+        }
         return "redirect:/operwork#create_account";
     }
 

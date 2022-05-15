@@ -33,6 +33,7 @@ public final class HibernateSessionFactoryUtil {
                 configuration.addAnnotatedClass(CapTerm.class);
                 configuration.addAnnotatedClass(CreditTerm.class);
                 configuration.addAnnotatedClass(Credit.class);
+                configuration.addAnnotatedClass(CreditGraph.class);
                 StandardServiceRegistryBuilder builder =
                     new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
                 sessionFactory = configuration.buildSessionFactory(builder.build());

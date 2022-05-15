@@ -16,7 +16,7 @@ public interface AccountDao {
     String generateAccountNum(String acc2p, String currencyCode);
 
     @Query
-    Account createAccount(int idClient, String currencyCode, String acc2p, String descript);
+    Account createAccount(int idClient, String currencyCode, String acc2p, String descript) throws Exception;
 
     @Query
     double checkBalance(String accountNum);
