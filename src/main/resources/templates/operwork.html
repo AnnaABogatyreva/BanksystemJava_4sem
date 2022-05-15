@@ -93,7 +93,7 @@
 
                     <input class="button" type="submit" value="Сохранить"
                            title="Сохранить изменения персональных данных клиента">
-                    <label class="report"><span th:text="${report_create_client}"></span></label>
+                    <label class="report"><span th:text="${report_create_client}"></span></label><br>
                     <label class="error"><span th:text="${error_create_client}"></span></label>
                 </form>
             </div>
@@ -114,7 +114,7 @@
                         </div></label>
                     </div>
                     <div><input class="button" type="submit" value="Открыть" title="Открыть новый счёт"></div>
-                    <label class="report"><span th:text="${report_create_account}"></span></label>
+                    <label class="report"><span th:text="${report_create_account}"></span></label><br>
                     <label class="error"><span th:text="${error_create_account}"></span></label>
                 </form>
             </div>
@@ -141,7 +141,7 @@
                     <div th:if="${zeroAccountList.isEmpty()}">
                         <label class="information">Нет открытых счетов c нулевым балансом</label>
                     </div>
-                    <label class="report"><span th:text="${report_close_account}"></span></label>
+                    <label class="report"><span th:text="${report_close_account}"></span></label><br>
                     <label class="error"><span th:text="${error_close_account}"></span></label>
                 </form>
             </div>
@@ -172,7 +172,7 @@
                     <div th:if="${accountList.isEmpty()}">
                         <label class="information">Нет открытых счетов</label>
                     </div>
-                    <label class="report"><span th:text="${report_push_account}"></span></label>
+                    <label class="report"><span th:text="${report_push_account}"></span></label><br>
                     <label class="error"><span th:text="${error_push_account}"></span></label>
                 </form>
             </div>
@@ -203,7 +203,7 @@
                     <div th:if="${accountList.isEmpty()}">
                         <label class="information">Нет открытых счетов</label>
                     </div>
-                    <label class="report"><span th:text="${report_pop_account}"></span></label>
+                    <label class="report"><span th:text="${report_pop_account}"></span></label><br>
                     <label class="error"><span th:text="${error_pop_account}"></span></label>
                 </form>
             </div>
@@ -242,7 +242,7 @@
                     <div th:if="${accountList.isEmpty()}">
                         <label class="information">Нет открытых счетов</label>
                     </div>
-                    <label class="report"><span th:text="${report_transaction_in}"></span></label>
+                    <label class="report"><span th:text="${report_transaction_in}"></span></label><br>
                     <label class="error"><span th:text="${error_transaction_in}"></span></label>
                 </form>
             </div>
@@ -279,7 +279,7 @@
                     <div th:if="${accountList.isEmpty()}">
                         <label class="information">Нет открытых счетов</label>
                     </div>
-                    <label class="report"><span th:text="${report_transaction_out}"></span></label>
+                    <label class="report"><span th:text="${report_transaction_out}"></span></label><br>
                     <label class="error"><span th:text="${error_transaction_out}"></span></label>
                 </form>
             </div>
@@ -320,7 +320,7 @@
                     <div th:if="${accountList.isEmpty()}">
                         <label class="information">Нет открытых счетов</label>
                     </div>
-                    <label class="report"><span th:text="${report_create_deposit}"></span></label>
+                    <label class="report"><span th:text="${report_create_deposit}"></span></label><br>
                     <label class="error"><span th:text="${error_create_deposit}"></span></label>
                 </form>
             </div>
@@ -358,7 +358,7 @@
                     <div th:if="${depositList.isEmpty() and !accountList.isEmpty()}">
                         <label class="information">Нет открытых вкладов</label>
                     </div>
-                    <label class="report"><span th:text="${report_close_deposit}"></span></label>
+                    <label class="report"><span th:text="${report_close_deposit}"></span></label><br>
                     <label class="error"><span th:text="${error_close_deposit}"></span></label>
                 </form>
 
@@ -388,7 +388,7 @@
                         <input class="button" type="submit" value="Выдача"
                                title="Выдача кредита по выбранным условиям">
                     </div>
-                    <label class="report"><span th:text="${report_create_credit}"></span></label>
+                    <label class="report"><span th:text="${report_create_credit}"></span></label><br>
                     <label class="error"><span th:text="${error_create_credit}"></span></label>
                 </form>
             </div>
@@ -414,7 +414,7 @@
                     <div th:if="${creditList.isEmpty()}">
                         <label class="information">Нет открытых кредитов</label>
                     </div>
-                    <label class="report"><span th:text="${report_show_graph_credit}"></span></label>
+                    <label class="report"><span th:text="${report_show_graph_credit}"></span></label><br>
                     <label class="error"><span th:text="${error_show_graph_credit}"></span></label>
                 </form>
             </div>
@@ -440,7 +440,7 @@
                     <div th:if="${creditList.isEmpty()}">
                         <label class="information">Нет открытых кредитов</label>
                     </div>
-                    <label class="report"><span th:text="${report_close_credit}"></span></label>
+                    <label class="report"><span th:text="${report_close_credit}"></span></label><br>
                     <label class="error"><span th:text="${error_close_credit}"></span></label>
                 </form>
             </div>

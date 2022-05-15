@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/main-container.css">
+    <link rel="stylesheet" href="css/graph-credit.css">
     <link rel="icon" type="image/png" href="images/favicon.png">
     <title>Оператор</title>
 </head>
@@ -96,6 +97,7 @@
                             Средств на текущем счете достаточно для немедленного погашения<br>
                         </span>
                     </p>
+                    <div class="table-container">
                     <table>
                         <div class="form-name"><p>График погашений</p></div>
                         <tr>
@@ -110,8 +112,7 @@
                             <td th:text="${row.getMainDutySumStr()}"></td>
                             <td th:text="${row.getPercentSumStr()}"></td>
                             <td th:text="${row.getTotalSumStr()}"></td>
-                            <td th:if="${row.processed}">&check;</td>
-                            <td th:unless="${row.processed}"></td>
+                            <td th:text="${row.getProcessedStr()}"></td>
                         </tr>
                         <tr>
                             <td>Итого:</td>
@@ -121,6 +122,7 @@
                             <td></td>
                         </tr>
                     </table>
+                    </div>
                 </div>
                 <input class="button" type="submit" value="Назад" title="Вернуться к работе с клиентом">
             </form>

@@ -50,7 +50,7 @@
                     <label><input type="date" name="dateString"></label>
                     <input class="button" type="submit" value="Установить"
                            title="Установить указанный день как текущий">
-                    <label class="report"><span th:text="${report_change_operdate}"></span></label>
+                    <label class="report"><span th:text="${report_change_operdate}"></span></label><br>
                     <label class="error"><span th:text="${error_change_operdate}"></span></label>
                 </form>
             </div>
@@ -89,7 +89,7 @@
                     <div th:if="${bankAccountList.isEmpty()}">
                         <label class="information">Нет открытых счетов</label>
                     </div>
-                    <label class="report"><span th:text="${report_transaction_acc}"></span></label>
+                    <label class="report"><span th:text="${report_transaction_acc}"></span></label><br>
                     <label class="error"><span th:text="${error_transaction_acc}"></span></label>
                 </form>
             </div>
@@ -127,7 +127,7 @@
                     <div>
                         <input class="button" type="submit" value="Обновить" title="Обновить текущий курс валют">
                     </div>
-                    <label class="report"><span th:text="${report_change_currency_cost}"></span></label>
+                    <label class="report"><span th:text="${report_change_currency_cost}"></span></label><br>
                     <label class="error"><span th:text="${error_change_currency_cost}"></span></label>
                 </form>
             </div>

@@ -118,6 +118,10 @@ public class CreditGraph {
         return processed;
     }
 
+    public String getProcessedStr() {
+        return (processed == 0) ? "" : "✔";
+    }
+
     public void setId(int id) {
         this.id = id;
     }
